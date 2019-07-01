@@ -3,20 +3,20 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { addClass, addDisposableListener } from 'vs/base/browser/dom';
 import { Emitter } from 'vs/base/common/event';
-import { URI } from 'vs/base/common/uri';
-import { Webview, WebviewContentOptions, WebviewOptions } from 'vs/workbench/contrib/webview/common/webview';
-import { IThemeService, ITheme } from 'vs/platform/theme/common/themeService';
-import { IEnvironmentService } from 'vs/platform/environment/common/environment';
-import { IFileService } from 'vs/platform/files/common/files';
 import { Disposable } from 'vs/base/common/lifecycle';
-import { areWebviewInputOptionsEqual } from 'vs/workbench/contrib/webview/browser/webviewEditorService';
-import { addDisposableListener, addClass } from 'vs/base/browser/dom';
-import { getWebviewThemeData } from 'vs/workbench/contrib/webview/common/themeing';
+import { URI } from 'vs/base/common/uri';
 import { IConfigurationService } from 'vs/platform/configuration/common/configuration';
-import { loadLocalResource } from 'vs/workbench/contrib/webview/common/resourceLoader';
-import { WebviewPortMappingManager } from 'vs/workbench/contrib/webview/common/portMapping';
+import { IFileService } from 'vs/platform/files/common/files';
 import { ITunnelService } from 'vs/platform/remote/common/tunnel';
+import { ITheme, IThemeService } from 'vs/platform/theme/common/themeService';
+import { areWebviewInputOptionsEqual } from 'vs/workbench/contrib/webview/browser/webviewEditorService';
+import { WebviewPortMappingManager } from 'vs/workbench/contrib/webview/common/portMapping';
+import { loadLocalResource } from 'vs/workbench/contrib/webview/common/resourceLoader';
+import { getWebviewThemeData } from 'vs/workbench/contrib/webview/common/themeing';
+import { Webview, WebviewContentOptions, WebviewOptions } from 'vs/workbench/contrib/webview/common/webview';
+import { IEnvironmentService } from 'vs/platform/environment/common/environment';
 
 interface WebviewContent {
 	readonly html: string;
@@ -40,9 +40,9 @@ export class IFrameWebview extends Disposable implements Webview {
 		contentOptions: WebviewContentOptions,
 		@IThemeService themeService: IThemeService,
 		@ITunnelService tunnelService: ITunnelService,
-		@IEnvironmentService private readonly environmentService: IEnvironmentService,
 		@IFileService private readonly fileService: IFileService,
 		@IConfigurationService private readonly _configurationService: IConfigurationService,
+		@IEnvironmentService private readonly environmentService: IEnvironmentService,
 	) {
 		super();
 		const useExternalEndpoint = this._configurationService.getValue<string>('webview.experimental.useExternalEndpoint');

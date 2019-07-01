@@ -9,6 +9,7 @@ import { DynamicWebviewEditorOverlay } from 'vs/workbench/contrib/webview/browse
 import { IFrameWebview } from 'vs/workbench/contrib/webview/browser/webviewElement';
 import { IWebviewService, WebviewContentOptions, WebviewEditorOverlay, WebviewElement, WebviewOptions } from 'vs/workbench/contrib/webview/common/webview';
 import { ElectronWebviewBasedWebview } from 'vs/workbench/contrib/webview/electron-browser/webviewElement';
+import { webFrame } from 'electron';
 
 export class ElectronWebviewService implements IWebviewService {
 	_serviceBrand: any;
@@ -23,6 +24,11 @@ export class ElectronWebviewService implements IWebviewService {
 		options: WebviewOptions,
 		contentOptions: WebviewContentOptions
 	): WebviewElement {
+		webFrame.registerURLSchemeAsPrivileged('vscode-webview', {
+			secure: true,
+			corsEnabled: true,
+			allowServiceWorkers: true
+		});
 		const useExternalEndpoint = this._configService.getValue<string>('webview.experimental.useExternalEndpoint');
 		if (useExternalEndpoint) {
 			return this._instantiationService.createInstance(IFrameWebview, id, options, contentOptions);
