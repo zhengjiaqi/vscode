@@ -765,11 +765,12 @@ export class CodeApplication extends Disposable {
 			}
 		};
 
-		protocol.registerFileProtocol('vscode-webview', (request, callback) => {
+		protocol.registerFileProtocol('vscode-webview', (request, callback: any) => {
 			try {
 				const uri = URI.parse(request.url);
 				const validPaths = new Map([
 					['/', 'index.html'],
+					['/index.html', 'index.html'],
 					['/fake.html', 'fake.html'],
 					['/main.js', 'main.js'],
 					['/host.js', 'host.js'],
@@ -785,6 +786,7 @@ export class CodeApplication extends Disposable {
 			}
 			callback({ error: -10 /* ACCESS_DENIED - https://cs.chromium.org/chromium/src/net/base/net_error_list.h?l=32 */ });
 		});
+
 
 
 		protocol.registerBufferProtocol(Schemas.vscodeRemote, async (request, callback) => {
