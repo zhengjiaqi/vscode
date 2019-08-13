@@ -35,7 +35,7 @@ import { IssueReporterData, IssueReporterStyles, IssueType, ISettingsSearchIssue
 import BaseHtml from 'vs/code/electron-browser/issue/issueReporterPage';
 import { LogLevelSetterChannelClient, FollowerLogService } from 'vs/platform/log/common/logIpc';
 import { ILogService, getLogLevel } from 'vs/platform/log/common/log';
-import { OcticonLabel } from 'vs/base/browser/ui/octiconLabel/octiconLabel';
+import { IconsLabel } from 'vs/base/browser/ui/iconsLabel/iconsLabel';
 import { normalizeGitHubUrl } from 'vs/code/electron-browser/issue/issueReporterUtil';
 import { Button } from 'vs/base/browser/ui/button/button';
 import { withUndefinedAsNull } from 'vs/base/common/types';
@@ -647,7 +647,7 @@ export class IssueReporter extends Disposable {
 					issueState = $('span.issue-state');
 
 					const issueIcon = $('span.issue-icon');
-					const octicon = new OcticonLabel(issueIcon);
+					const octicon = new IconsLabel(issueIcon);
 					octicon.text = issue.state === 'open' ? '$(issue-opened)' : '$(issue-closed)';
 
 					const issueStateLabel = $('span.issue-state.label');

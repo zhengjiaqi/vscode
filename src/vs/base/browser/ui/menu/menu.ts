@@ -517,13 +517,13 @@ class BaseMenuActionViewItem extends BaseActionViewItem {
 		}
 		if (this.options.icon) {
 			this.cssClass = this.getAction().class || '';
-			addClass(this.label, 'icon');
+			addClass(this.label, 'icons');
 			if (this.cssClass) {
 				addClasses(this.label, this.cssClass);
 			}
 			this.updateEnabled();
 		} else {
-			removeClass(this.label, 'icon');
+			removeClass(this.label, 'icons');
 		}
 	}
 

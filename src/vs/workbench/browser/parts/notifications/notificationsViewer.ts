@@ -206,7 +206,7 @@ export class NotificationRenderer implements IListRenderer<INotificationViewItem
 
 		// Icon
 		data.icon = document.createElement('div');
-		addClass(data.icon, 'notification-list-item-icon');
+		addClass(data.icon, 'icons');
 
 		// Message
 		data.message = document.createElement('div');

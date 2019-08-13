@@ -43,7 +43,7 @@ export class ClearAllNotificationsAction extends Action {
 		label: string,
 		@ICommandService private readonly commandService: ICommandService
 	) {
-		super(id, label, 'clear-all-notifications-action');
+		super(id, label, 'icon-clear-all');
 	}
 
 	run(notification: INotificationViewItem): Promise<any> {
@@ -63,7 +63,7 @@ export class HideNotificationsCenterAction extends Action {
 		label: string,
 		@ICommandService private readonly commandService: ICommandService
 	) {
-		super(id, label, 'hide-all-notifications-action');
+		super(id, label, 'icon-chevron-down');
 	}
 
 	run(notification: INotificationViewItem): Promise<any> {
@@ -123,7 +123,7 @@ export class ConfigureNotificationAction extends Action {
 		label: string,
 		private readonly _configurationActions: ReadonlyArray<IAction>
 	) {
-		super(id, label, 'configure-notification-action');
+		super(id, label, 'icon-gear');
 	}
 
 	get configurationActions(): ReadonlyArray<IAction> {

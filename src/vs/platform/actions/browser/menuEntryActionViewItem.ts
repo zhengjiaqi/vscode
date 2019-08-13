@@ -244,12 +244,12 @@ export class MenuEntryActionViewItem extends ActionViewItem {
 				iconClass = MenuEntryActionViewItem.ICON_PATH_TO_CSS_RULES.get(iconPathMapKey)!;
 			} else {
 				iconClass = ids.nextId();
-				createCSSRule(`.icon.${iconClass}`, `background-image: url("${asDomUri(item.iconLocation.light || item.iconLocation.dark).toString()}")`);
+				createCSSRule(`.icons.${iconClass}`, `background-image: url("${asDomUri(item.iconLocation.light || item.iconLocation.dark).toString()}")`);
 				createCSSRule(`.vs-dark .icon.${iconClass}, .hc-black .icon.${iconClass}`, `background-image: url("${asDomUri(item.iconLocation.dark).toString()}")`);
 				MenuEntryActionViewItem.ICON_PATH_TO_CSS_RULES.set(iconPathMapKey, iconClass);
 			}
 
-			addClasses(this.label, 'icon', iconClass);
+			addClasses(this.label, 'icons', iconClass);
 			this._itemClassDispose.value = toDisposable(() => removeClasses(this.label, 'icon', iconClass));
 		}
 	}

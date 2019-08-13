@@ -226,3 +226,54 @@ body.web {
 .monaco-workbench .monaco-list:focus {
 	outline: 0 !important; /* tree indicates focus not via outline but through the focused item */
 }
+
+.vs {
+	--blue: #00539c;
+	--gray: #424242;
+	--green: #388a34;
+	--greenLight: #9cce9c;
+	--orange: #c27d1a;
+	--orangeLight: #ff8e00;
+	--purple: #652d90;
+	--red: #a31515;
+	--redLight: #e51400;
+	--yellow: #DDB100;
+}
+
+.vs-dark {
+	--blue: #75beff;
+	--gray: #c5c5c5;
+	--green: #89d185;
+	--greenLight: #9cce9c;
+	--orange: #e8ab53;
+	--orangeLight: #ff8e00;
+	--purple: #b180d7;
+	--red: #f48771;
+	--redLight: #e51400;
+	--yellow: #fc0;
+}
+
+.monaco-action-bar .action-label.icons {
+	font-size: 16px;
+}
+
+.icons {
+	color: var(--gray)
+}
+
+
+.icons.icon-error {
+	color: var(--red);
+}
+
+.icons.icon-info {
+	color: var(--blue);
+}
+
+.icons.icon-warning {
+	color: var(--yellow);;
+}
+
+.statusbar .icons{
+	color: inherit !important;
+}
