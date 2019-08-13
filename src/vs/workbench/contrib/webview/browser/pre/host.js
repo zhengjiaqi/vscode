@@ -42,7 +42,7 @@
 		}
 
 		const expectedWorkerVersion = 1;
-
+try {
 		navigator.serviceWorker.register('service-worker.js').then(async registration => {
 			await navigator.serviceWorker.ready;
 
@@ -64,7 +64,9 @@
 			navigator.serviceWorker.addEventListener('message', versionHandler);
 			registration.active.postMessage({ channel: 'version' });
 		});
-
+} catch (e) {
+	console.log(e);
+}
 		const forwardFromHostToWorker = (channel) => {
 			hostMessaging.onMessage(channel, event => {
 				navigator.serviceWorker.ready.then(registration => {

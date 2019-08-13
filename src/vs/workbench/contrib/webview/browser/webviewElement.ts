@@ -45,11 +45,10 @@ export class IFrameWebview extends Disposable implements Webview {
 		@IEnvironmentService private readonly environmentService: IEnvironmentService,
 	) {
 		super();
-		const useExternalEndpoint = this._configurationService.getValue<string>('webview.experimental.useExternalEndpoint');
-
-		if (typeof environmentService.webviewEndpoint !== 'string' && !useExternalEndpoint) {
-			throw new Error('To use iframe based webviews, you must configure `environmentService.webviewEndpoint`');
-		}
+		// const useExternalEndpoint = this._configurationService.getValue<string>('webview.experimental.useExternalEndpoint');
+		// if (typeof environmentService.webviewEndpoint !== 'string' && !useExternalEndpoint) {
+		// 	throw new Error('To use iframe based webviews, you must configure `environmentService.webviewEndpoint`');
+		// }
 
 		this._portMappingManager = this._register(new WebviewPortMappingManager(
 			this._options.extension ? this._options.extension.location : undefined,
@@ -143,7 +142,7 @@ export class IFrameWebview extends Disposable implements Webview {
 		this._register(themeService.onThemeChange(this.style, this));
 	}
 
-	private get endpoint(): string {
+	protected get endpoint(): string {
 		const useExternalEndpoint = this._configurationService.getValue<string>('webview.experimental.useExternalEndpoint');
 		const baseEndpoint = useExternalEndpoint ? 'https://{{uuid}}.vscode-webview-test.com/8fa811108f0f0524c473020ef57b6620f6c201e1' : this.environmentService.webviewEndpoint!;
 		const endpoint = baseEndpoint.replace('{{uuid}}', this.id);
