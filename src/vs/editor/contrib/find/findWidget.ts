@@ -422,8 +422,8 @@ export class FindWidget extends Widget implements IOverlayWidget, IHorizontalSas
 		this._replaceAllBtn.setEnabled(this._isVisible && this._isReplaceVisible && findInputIsNonEmpty);
 
 		dom.toggleClass(this._domNode, 'replaceToggled', this._isReplaceVisible);
-		this._toggleReplaceBtn.toggleClass('collapse', !this._isReplaceVisible);
-		this._toggleReplaceBtn.toggleClass('expand', this._isReplaceVisible);
+		this._toggleReplaceBtn.toggleClass('codicon-chevron-right', !this._isReplaceVisible);
+		this._toggleReplaceBtn.toggleClass('codicon-chevron-down', this._isReplaceVisible);
 		this._toggleReplaceBtn.setExpanded(this._isReplaceVisible);
 
 		let canReplace = !this._codeEditor.getConfiguration().readOnly;
@@ -842,7 +842,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IHorizontalSas
 		// Previous button
 		this._prevBtn = this._register(new SimpleButton({
 			label: NLS_PREVIOUS_MATCH_BTN_LABEL + this._keybindingLabelFor(FIND_IDS.PreviousMatchFindAction),
-			className: 'previous',
+			className: 'codicon-arrow-up',
 			onTrigger: () => {
 				this._codeEditor.getAction(FIND_IDS.PreviousMatchFindAction).run().then(undefined, onUnexpectedError);
 			}
@@ -851,7 +851,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IHorizontalSas
 		// Next button
 		this._nextBtn = this._register(new SimpleButton({
 			label: NLS_NEXT_MATCH_BTN_LABEL + this._keybindingLabelFor(FIND_IDS.NextMatchFindAction),
-			className: 'next',
+			className: 'codicon-arrow-down',
 			onTrigger: () => {
 				this._codeEditor.getAction(FIND_IDS.NextMatchFindAction).run().then(undefined, onUnexpectedError);
 			}
@@ -888,7 +888,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IHorizontalSas
 		// Close button
 		this._closeBtn = this._register(new SimpleButton({
 			label: NLS_CLOSE_BTN_LABEL + this._keybindingLabelFor(FIND_IDS.CloseFindWidgetCommand),
-			className: 'close-fw',
+			className: 'codicon-close close-fw',
 			onTrigger: () => {
 				this._state.change({ isRevealed: false, searchScope: null }, false);
 			},
@@ -925,7 +925,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IHorizontalSas
 		}));
 
 		this._preserveCase = this._register(new Checkbox({
-			actionClassName: 'monaco-preserve-case',
+			actionClassName: 'codicon-preserve-case',
 			title: NLS_PRESERVE_CASE_LABEL,
 			isChecked: false,
 		}));
@@ -940,7 +940,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IHorizontalSas
 		// Replace one button
 		this._replaceBtn = this._register(new SimpleButton({
 			label: NLS_REPLACE_BTN_LABEL + this._keybindingLabelFor(FIND_IDS.ReplaceOneAction),
-			className: 'replace',
+			className: 'codicon-replace',
 			onTrigger: () => {
 				this._controller.replace();
 			},
@@ -955,7 +955,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IHorizontalSas
 		// Replace all button
 		this._replaceAllBtn = this._register(new SimpleButton({
 			label: NLS_REPLACE_ALL_BTN_LABEL + this._keybindingLabelFor(FIND_IDS.ReplaceAllAction),
-			className: 'replace-all',
+			className: 'codicon-replace-all',
 			onTrigger: () => {
 				this._controller.replaceAll();
 			}
@@ -985,8 +985,8 @@ export class FindWidget extends Widget implements IOverlayWidget, IHorizontalSas
 				this._showViewZone();
 			}
 		}));
-		this._toggleReplaceBtn.toggleClass('expand', this._isReplaceVisible);
-		this._toggleReplaceBtn.toggleClass('collapse', !this._isReplaceVisible);
+		this._toggleReplaceBtn.toggleClass('codicon-chevron-down', this._isReplaceVisible);
+		this._toggleReplaceBtn.toggleClass('codicon-chevron-right', !this._isReplaceVisible);
 		this._toggleReplaceBtn.setExpanded(this._isReplaceVisible);
 
 		// Widget
@@ -1066,7 +1066,7 @@ class SimpleCheckbox extends Widget {
 		this._checkbox.tabIndex = -1;
 
 		this._label = document.createElement('label');
-		this._label.className = 'label';
+		this._label.className = 'label codicon codicon-selection';
 		// Connect the label and the checkbox. Checkbox will get checked when the label receives a click.
 		this._label.htmlFor = this._checkbox.id;
 		this._label.tabIndex = -1;
@@ -1135,7 +1135,7 @@ export class SimpleButton extends Widget {
 		this._domNode = document.createElement('div');
 		this._domNode.title = this._opts.label;
 		this._domNode.tabIndex = 0;
-		this._domNode.className = 'button ' + this._opts.className;
+		this._domNode.className = 'button codicon ' + this._opts.className;
 		this._domNode.setAttribute('role', 'button');
 		this._domNode.setAttribute('aria-label', this._opts.label);
 

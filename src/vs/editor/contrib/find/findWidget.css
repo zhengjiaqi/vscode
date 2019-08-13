@@ -124,7 +124,8 @@
 	width: 20px;
 	height: 20px;
 	display: flex;
-	display: -webkit-flex;
+	align-items: center;
+	justify-content: center;
 	flex: initial;
 	margin-left: 3px;
 	background-position: center center;
@@ -153,6 +154,9 @@
 	left: 0;
 	width: 18px;
 	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	-webkit-box-sizing:	border-box;
 	-o-box-sizing:		border-box;
 	-moz-box-sizing:	border-box;
@@ -162,14 +166,6 @@
 
 .monaco-editor .find-widget .button.toggle.disabled {
 	display: none;
-}
-
-.monaco-editor .find-widget .previous {
-	background-image: url('images/chevron-previous-light.svg');
-}
-
-.monaco-editor .find-widget .next {
-	background-image: url('images/chevron-next-light.svg');
 }
 
 .monaco-editor .find-widget .disabled {
@@ -187,13 +183,13 @@
 
 .monaco-editor .find-widget .monaco-checkbox .label {
 	content: '';
-	display: inline-block;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-image: url('images/find-selection-light.svg');
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 20px;
 	height: 20px;
 	border: none;
+	box-sizing: border-box;
 }
 
 .monaco-editor .find-widget .monaco-checkbox .checkbox:disabled + .label {
@@ -211,26 +207,6 @@
 
 .monaco-editor .find-widget .monaco-checkbox .checkbox:checked + .label {
 	background-color: rgba(100, 100, 100, 0.2);
-}
-
-.monaco-editor .find-widget .close-fw {
-	background-image: url('images/close-light.svg');
-}
-
-.monaco-editor .find-widget .expand {
-	background-image: url('images/tree-expanded-light.svg');
-}
-
-.monaco-editor .find-widget .collapse {
-	background-image: url('images/tree-collapsed-light.svg');
-}
-
-.monaco-editor .find-widget .replace {
-	background-image: url('images/replace-light.svg');
-}
-
-.monaco-editor .find-widget .replace-all {
-	background-image: url('images/replace-all-light.svg');
 }
 
 .monaco-editor .find-widget > .replace-part {
@@ -291,48 +267,8 @@
 	margin-left: -4px;
 }
 
-.monaco-editor.hc-black .find-widget .previous,
-.monaco-editor.vs-dark .find-widget .previous {
-	background-image: url('images/chevron-previous-dark.svg');
-}
-
-.monaco-editor.hc-black .find-widget .next,
-.monaco-editor.vs-dark .find-widget .next {
-	background-image: url('images/chevron-next-dark.svg');
-}
-
-.monaco-editor.hc-black .find-widget .monaco-checkbox .label,
-.monaco-editor.vs-dark .find-widget .monaco-checkbox .label {
-	background-image: url('images/find-selection-dark.svg');
-}
-
 .monaco-editor.vs-dark .find-widget .monaco-checkbox .checkbox:not(:disabled):hover:before + .label {
 	background-color: rgba(255, 255, 255, 0.1);
-}
-
-.monaco-editor.hc-black .find-widget .close-fw,
-.monaco-editor.vs-dark .find-widget .close-fw {
-	background-image: url('images/close-dark.svg');
-}
-
-.monaco-editor.hc-black .find-widget .replace,
-.monaco-editor.vs-dark .find-widget .replace {
-	background-image: url('images/replace-dark.svg');
-}
-
-.monaco-editor.hc-black .find-widget .replace-all,
-.monaco-editor.vs-dark .find-widget .replace-all {
-	background-image: url('images/replace-all-dark.svg');
-}
-
-.monaco-editor.hc-black .find-widget .expand,
-.monaco-editor.vs-dark .find-widget .expand {
-	background-image: url('images/tree-expanded-dark.svg');
-}
-
-.monaco-editor.hc-black .find-widget .collapse,
-.monaco-editor.vs-dark .find-widget .collapse {
-	background-image: url('images/tree-collapsed-dark.svg');
 }
 
 .monaco-editor.hc-black .find-widget .button:not(.disabled):hover,

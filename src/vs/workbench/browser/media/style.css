@@ -228,6 +228,7 @@ body.web {
 }
 
 .vs {
+	--active: 424242;
 	--blue: #00539c;
 	--gray: #424242;
 	--green: #388a34;
@@ -241,6 +242,7 @@ body.web {
 }
 
 .vs-dark {
+	--active: white;
 	--blue: #75beff;
 	--gray: #c5c5c5;
 	--green: #89d185;
@@ -259,6 +261,13 @@ body.web {
 
 .codicon {
 	color: var(--gray)
+}
+
+.codicon:focus,
+.codicon.checked,
+.monaco-workbench [tabindex="0"]:focus > .codicon,
+.monaco-editor .find-widget .monaco-checkbox .checkbox:checked + .label.codicon {
+	color: var(--active);
 }
 
 

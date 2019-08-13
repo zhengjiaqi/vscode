@@ -22,7 +22,7 @@ const NLS_REGEX_CHECKBOX_LABEL = nls.localize('regexDescription', "Use Regular E
 export class CaseSensitiveCheckbox extends Checkbox {
 	constructor(opts: IFindInputCheckboxOpts) {
 		super({
-			actionClassName: 'monaco-case-sensitive',
+			actionClassName: 'codicon-case-sensitive',
 			title: NLS_CASE_SENSITIVE_CHECKBOX_LABEL + opts.appendTitle,
 			isChecked: opts.isChecked,
 			inputActiveOptionBorder: opts.inputActiveOptionBorder,
@@ -34,7 +34,7 @@ export class CaseSensitiveCheckbox extends Checkbox {
 export class WholeWordsCheckbox extends Checkbox {
 	constructor(opts: IFindInputCheckboxOpts) {
 		super({
-			actionClassName: 'monaco-whole-word',
+			actionClassName: 'codicon-whole-word',
 			title: NLS_WHOLE_WORD_CHECKBOX_LABEL + opts.appendTitle,
 			isChecked: opts.isChecked,
 			inputActiveOptionBorder: opts.inputActiveOptionBorder,
@@ -46,7 +46,7 @@ export class WholeWordsCheckbox extends Checkbox {
 export class RegexCheckbox extends Checkbox {
 	constructor(opts: IFindInputCheckboxOpts) {
 		super({
-			actionClassName: 'monaco-regex',
+			actionClassName: 'codicon-regex',
 			title: NLS_REGEX_CHECKBOX_LABEL + opts.appendTitle,
 			isChecked: opts.isChecked,
 			inputActiveOptionBorder: opts.inputActiveOptionBorder,
