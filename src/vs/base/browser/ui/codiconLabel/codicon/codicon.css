@@ -3,11 +3,10 @@
 * Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-
 @font-face {
 	font-family: "codicon";
-	src: url("./codicon.ttf?c034ba42bb9fdc381716506c8a7a282e") format("truetype"),
-url("./codicon.svg?c034ba42bb9fdc381716506c8a7a282e#codicon") format("svg");
+	src: url("./codicon.ttf?32601c57163dc3e0f07c31979fbcfb3c") format("truetype"),
+url("./codicon.svg?32601c57163dc3e0f07c31979fbcfb3c#codicon") format("svg");
 }
 
 .codicon {
