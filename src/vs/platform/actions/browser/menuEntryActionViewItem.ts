@@ -249,8 +249,8 @@ export class MenuEntryActionViewItem extends ActionViewItem {
 				MenuEntryActionViewItem.ICON_PATH_TO_CSS_RULES.set(iconPathMapKey, iconClass);
 			}
 
-			addClasses(this.label, 'icons', iconClass);
-			this._itemClassDispose.value = toDisposable(() => removeClasses(this.label, 'icon', iconClass));
+			addClasses(this.label, 'codicon', iconClass);
+			this._itemClassDispose.value = toDisposable(() => removeClasses(this.label, 'codicon', iconClass));
 		}
 	}
 }

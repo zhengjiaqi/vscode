@@ -27,7 +27,7 @@
 	height: calc(100% - 38px);
 }
 
-.extensions-viewlet > .extensions .list-actionbar-container .monaco-action-bar .action-item > .octicon {
+.extensions-viewlet > .extensions .list-actionbar-container .monaco-action-bar .action-item > .codicon {
 	font-size: 12px;
 	line-height: 1;
 	margin-right: 10px;
@@ -77,7 +77,7 @@
 	box-sizing: border-box;
 }
 
-.extensions-viewlet > .extensions .monaco-list-row > .bookmark > .recommendation > .octicon {
+.extensions-viewlet > .extensions .monaco-list-row > .bookmark > .recommendation > .codicon {
 	position: absolute;
 	top: 1px;
 	left: 1px;
@@ -139,7 +139,7 @@
 	justify-content: center;
 }
 
-.extensions-viewlet > .extensions .monaco-list-row > .extension > .details > .header-container > .header .extension-remote-badge > .octicon {
+.extensions-viewlet > .extensions .monaco-list-row > .extension > .details > .header-container > .header .extension-remote-badge > .codicon {
 	font-size: 12px;
 }
 
@@ -193,7 +193,7 @@
 	margin: 0 6px;
 }
 
-.extensions-viewlet > .extensions .extension > .details > .header-container > .header > .install-count > .octicon {
+.extensions-viewlet > .extensions .extension > .details > .header-container > .header > .install-count > .codicon {
 	font-size: 100%;
 	margin-right: 2px;
 }

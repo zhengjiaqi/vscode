@@ -253,27 +253,27 @@ body.web {
 	--yellow: #fc0;
 }
 
-.monaco-action-bar .action-label.icons {
+.monaco-action-bar .action-label.codicon {
 	font-size: 16px;
 }
 
-.icons {
+.codicon {
 	color: var(--gray)
 }
 
 
-.icons.icon-error {
+.codicon.codicon-error {
 	color: var(--red);
 }
 
-.icons.icon-info {
+.codicon.codicon-info {
 	color: var(--blue);
 }
 
-.icons.icon-warning {
+.codicon.codicon-warning {
 	color: var(--yellow);;
 }
 
-.statusbar .icons{
+.statusbar .codicon{
 	color: inherit !important;
 }

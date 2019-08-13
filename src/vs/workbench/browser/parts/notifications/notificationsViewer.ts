@@ -206,7 +206,7 @@ export class NotificationRenderer implements IListRenderer<INotificationViewItem
 
 		// Icon
 		data.icon = document.createElement('div');
-		addClass(data.icon, 'icons');
+		addClass(data.icon, 'codicon');
 
 		// Message
 		data.message = document.createElement('div');
@@ -362,7 +362,7 @@ export class NotificationTemplateRenderer extends Disposable {
 	private renderSeverity(notification: INotificationViewItem): void {
 		NotificationTemplateRenderer.SEVERITIES.forEach(severity => {
 			const domAction = notification.severity === this.toSeverity(severity) ? addClass : removeClass;
-			domAction(this.template.icon, `icon-${severity}`);
+			domAction(this.template.icon, `codicon-${severity}`);
 		});
 	}
 

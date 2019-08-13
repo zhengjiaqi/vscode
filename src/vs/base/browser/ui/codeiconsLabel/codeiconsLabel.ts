@@ -3,28 +3,28 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import 'vs/css!./icons/icons';
-import 'vs/css!./icons/icons-animations';
+import 'vs/css!./codicon/codicon';
+import 'vs/css!./codicon/codicon-animations';
 import { escape } from 'vs/base/common/strings';
 
 function expand(text: string): string {
 	return text.replace(/\$\(((.+?)(~(.*?))?)\)/g, (_match, _g1, name, _g3, animation) => {
-		return `<span class="icons icon-${name} ${animation ? `icon-animation-${animation}` : ''}"></span>`;
+		return `<span class="codicon icon-${name} ${animation ? `codeicons-animation-${animation}` : ''}"></span>`;
 	});
 }
 
-export function renderIcons(label: string): string {
+export function renderCodicon(label: string): string {
 	return expand(escape(label));
 }
 
-export class IconsLabel {
+export class CodeiconsLabel {
 
 	constructor(
 		private readonly _container: HTMLElement
 	) { }
 
 	set text(text: string) {
-		this._container.innerHTML = renderIcons(text || '');
+		this._container.innerHTML = renderCodicon(text || '');
 	}
 
 	set title(title: string) {

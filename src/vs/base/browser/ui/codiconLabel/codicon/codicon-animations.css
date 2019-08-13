@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-@keyframes octicon-spin {
+@keyframes codicon-spin {
 	100% {
 		transform:rotate(360deg);
 	}
 }
 
-.octicon-animation-spin {
-	animation: octicon-spin 2s linear infinite;
+.codicon-animation-spin {
+	animation: codicon-spin 2s linear infinite;
 }

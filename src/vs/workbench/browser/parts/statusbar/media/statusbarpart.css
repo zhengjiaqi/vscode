@@ -77,7 +77,8 @@
 
 .monaco-workbench .part.statusbar > .items-container > .statusbar-item > a {
 	cursor: pointer;
-	display: inline-block;
+	display: flex;
+	align-items: center;
 	height: 100%;
 	padding: 0 5px 0 5px;
 	white-space: pre; /* gives some degree of styling */
@@ -91,7 +92,7 @@
 	pointer-events: none;
 }
 
-.monaco-workbench .part.statusbar > .items-container > .statusbar-item  span.octicon {
+.monaco-workbench .part.statusbar > .items-container > .statusbar-item  span.codicon {
 	text-align: center;
 	font-size: 14px;
 }

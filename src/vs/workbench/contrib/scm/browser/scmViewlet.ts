@@ -34,7 +34,7 @@ import { attachBadgeStyler, attachInputBoxStyler } from 'vs/platform/theme/commo
 import { IStorageService } from 'vs/platform/storage/common/storage';
 import { InputBox, MessageType } from 'vs/base/browser/ui/inputbox/inputBox';
 import { Command } from 'vs/editor/common/modes';
-import { renderIcons } from 'vs/base/browser/ui/iconsLabel/iconsLabel';
+import { renderCodicon } from 'vs/base/browser/ui/codiconLabel/codiconLabel';
 import { format } from 'vs/base/common/strings';
 import { ISpliceable, ISequence, ISplice } from 'vs/base/common/sequence';
 import { firstIndex, equals } from 'vs/base/common/arrays';
@@ -103,7 +103,7 @@ class StatusBarActionViewItem extends ActionViewItem {
 
 	updateLabel(): void {
 		if (this.options.label) {
-			this.label.innerHTML = renderIcons(this.getAction().label);
+			this.label.innerHTML = renderCodicon(this.getAction().label);
 		}
 	}
 }

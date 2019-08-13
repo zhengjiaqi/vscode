@@ -5,11 +5,11 @@
 
 import { escape } from 'vs/base/common/strings';
 
-export function renderIcons(text: string): string {
+export function renderCodicon(text: string): string {
 	return escape(text);
 }
 
-export class IconsLabel {
+export class CodeiconsLabel {
 
 	private _container: HTMLElement;
 
@@ -18,7 +18,7 @@ export class IconsLabel {
 	}
 
 	set text(text: string) {
-		this._container.innerHTML = renderIcons(text || '');
+		this._container.innerHTML = renderCodicon(text || '');
 	}
 
 }
