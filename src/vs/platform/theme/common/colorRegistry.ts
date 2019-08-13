@@ -398,6 +398,11 @@ export const overviewRulerSelectionHighlightForeground = registerColor('editorOv
 
 export const minimapFindMatch = registerColor('minimap.findMatchHighlight', { light: '#d18616', dark: '#d18616', hc: '#AB5A00' }, nls.localize('minimapFindMatchHighlight', 'Minimap marker color for find matches.'), true);
 
+// ----- icon colors
+export const iconDefault = registerColor('icon.default', { dark: foreground, light: foreground, hc: foreground }, nls.localize('icon.default', "Overall default icon color."));
+export const iconError = registerColor('icon.error', { dark: editorErrorForeground, light: editorErrorForeground, hc: editorErrorForeground }, nls.localize('icon.error', "Icon color."));
+export const iconWarning = registerColor('icon.warning', { dark: editorWarningForeground, light: editorWarningForeground, hc: editorWarningForeground }, nls.localize('icon.warning', "Icon color."));
+export const iconInfo = registerColor('icon.info', { dark: editorInfoForeground, light: editorInfoForeground, hc: editorInfoForeground }, nls.localize('icon.info', "Icon color."));
 
 // ----- color functions
 

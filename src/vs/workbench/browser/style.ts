@@ -6,10 +6,31 @@
 import 'vs/css!./media/style';
 
 import { registerThemingParticipant, ITheme, ICssStyleCollector, HIGH_CONTRAST } from 'vs/platform/theme/common/themeService';
-import { foreground, selectionBackground, focusBorder, scrollbarShadow, scrollbarSliderActiveBackground, scrollbarSliderBackground, scrollbarSliderHoverBackground, listHighlightForeground, inputPlaceholderForeground } from 'vs/platform/theme/common/colorRegistry';
+import { foreground, selectionBackground, focusBorder, scrollbarShadow, scrollbarSliderActiveBackground, scrollbarSliderBackground, scrollbarSliderHoverBackground, listHighlightForeground, inputPlaceholderForeground, iconDefault, iconError, iconWarning, iconInfo } from 'vs/platform/theme/common/colorRegistry';
 import { WORKBENCH_BACKGROUND } from 'vs/workbench/common/theme';
 
 registerThemingParticipant((theme: ITheme, collector: ICssStyleCollector) => {
+
+	// Default icon color
+	const iconDefaultColor = theme.getColor(iconDefault);
+	if (iconDefault) {
+		collector.addRule(`.codicon { color: ${iconDefaultColor}; }`);
+	}
+
+	const iconErrorColor = theme.getColor(iconError);
+	if (iconError) {
+		collector.addRule(`.codicon-error { color: ${iconErrorColor}; }`);
+	}
+
+	const iconWarningColor = theme.getColor(iconWarning);
+	if (iconWarning) {
+		collector.addRule(`.codicon-warning { color: ${iconWarningColor}; }`);
+	}
+
+	const iconInfoColor = theme.getColor(iconInfo);
+	if (iconInfo) {
+		collector.addRule(`.codicon-info { color: ${iconInfoColor}; }`);
+	}
 
 	// Foreground
 	const windowForeground = theme.getColor(foreground);
