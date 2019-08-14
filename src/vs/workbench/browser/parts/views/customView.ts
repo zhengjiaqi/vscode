@@ -278,7 +278,7 @@ export class CustomTreeView extends Disposable implements ITreeView {
 
 	getPrimaryActions(): IAction[] {
 		if (this.showCollapseAllAction) {
-			const collapseAllAction = new Action('vs.tree.collapse', localize('collapseAll', "Collapse All"), 'monaco-tree-action collapse-all', true, () => this.tree ? new CollapseAllAction<ITreeItem, ITreeItem, FuzzyScore>(this.tree, true).run() : Promise.resolve());
+			const collapseAllAction = new Action('vs.tree.collapse', localize('collapseAll', "Collapse All"), 'monaco-tree-action codicon-collapse-all', true, () => this.tree ? new CollapseAllAction<ITreeItem, ITreeItem, FuzzyScore>(this.tree, true).run() : Promise.resolve());
 			return [...this.menus.getTitleActions(), collapseAllAction];
 		} else {
 			return this.menus.getTitleActions();
@@ -677,6 +677,7 @@ interface ITreeExplorerTemplateData {
 	container: HTMLElement;
 	resourceLabel: IResourceLabel;
 	icon: HTMLElement;
+	iconName?: string;
 	actionBar: ActionBar;
 }
 
@@ -725,6 +726,7 @@ class TreeRenderer extends Disposable implements ITreeRenderer<ITreeItem, FuzzyS
 		const icon = this.themeService.getTheme().type === LIGHT ? node.icon : node.iconDark;
 		const iconUrl = icon ? URI.revive(icon) : null;
 		const title = node.tooltip ? node.tooltip : resource ? undefined : label;
+		const iconName = isString(node.iconName);
 
 		// reset
 		templateData.actionBar.clear();
@@ -737,7 +739,14 @@ class TreeRenderer extends Disposable implements ITreeRenderer<ITreeItem, FuzzyS
 		}
 
 		templateData.icon.style.backgroundImage = iconUrl ? `url('${DOM.asDomUri(iconUrl).toString(true)}')` : '';
-		DOM.toggleClass(templateData.icon, 'custom-view-tree-node-item-icon', !!iconUrl);
+
+		if (iconName) {
+			console.log('iconName found: ' + iconName);
+			DOM.toggleClass(templateData.icon, 'custom-view-tree-node-item-icon', !!iconName);
+		} else {
+			DOM.toggleClass(templateData.icon, 'custom-view-tree-node-item-icon', !!iconUrl);
+		}
+
 		templateData.actionBar.context = (<TreeViewItemHandleArg>{ $treeViewId: this.treeViewId, $treeItemHandle: node.handle });
 		templateData.actionBar.push(this.menus.getResourceActions(node), { icon: true, label: false });
 		this.setAlignment(templateData.container, node);
@@ -798,8 +807,12 @@ class Aligner extends Disposable {
 	}
 
 	private hasIcon(node: ITreeItem): boolean {
+		const iconName = node.iconName;
 		const icon = this.themeService.getTheme().type === LIGHT ? node.icon : node.iconDark;
 		if (icon) {
+			return true;
+		}
+		if (iconName) {
 			return true;
 		}
 		if (node.resourceUri || node.themeIcon) {

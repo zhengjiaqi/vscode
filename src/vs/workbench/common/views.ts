@@ -394,6 +394,8 @@ export interface ITreeItem {
 
 	iconDark?: UriComponents;
 
+	iconName?: string;
+
 	themeIcon?: ThemeIcon;
 
 	resourceUri?: UriComponents;

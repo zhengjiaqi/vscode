@@ -2025,6 +2025,7 @@ export class TreeItem {
 
 	label?: string | vscode.TreeItemLabel;
 	resourceUri?: URI;
+	iconName?: string;
 	iconPath?: string | URI | { light: string | URI; dark: string | URI };
 	command?: vscode.Command;
 	contextValue?: string;

@@ -218,9 +218,11 @@ namespace schema {
 		enablement?: string;
 		category?: string | ILocalizedString;
 		icon?: IUserFriendlyIcon;
+		iconName?: IUserFriendlyIconName;
 	}
 
 	export type IUserFriendlyIcon = string | { light: string; dark: string; };
+	export type IUserFriendlyIconName = string;
 
 	export function isValidCommand(command: IUserFriendlyCommand, collector: ExtensionMessageCollector): boolean {
 		if (!command) {
@@ -344,7 +346,7 @@ commandsExtensionPoint.setHandler(extensions => {
 			return;
 		}
 
-		const { icon, enablement, category, title, command } = userFriendlyCommand;
+		const { icon, enablement, category, title, command, iconName } = userFriendlyCommand;
 
 		let absoluteIcon: { dark: URI; light?: URI; } | undefined;
 		if (icon) {
@@ -366,6 +368,7 @@ commandsExtensionPoint.setHandler(extensions => {
 			title,
 			category,
 			precondition: ContextKeyExpr.deserialize(enablement),
+			iconName,
 			iconLocation: absoluteIcon
 		});
 		disposables.push(registration);

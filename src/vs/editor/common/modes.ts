@@ -1336,6 +1336,7 @@ export interface Comment {
 	readonly uniqueIdInThread: number;
 	readonly body: IMarkdownString;
 	readonly userName: string;
+	readonly iconName?: string;
 	readonly userIconPath?: string;
 	readonly contextValue?: string;
 	readonly commentReactions?: CommentReaction[];

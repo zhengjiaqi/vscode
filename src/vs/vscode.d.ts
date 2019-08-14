@@ -6998,6 +6998,8 @@ declare module 'vscode' {
 		 */
 		id?: string;
 
+		iconName?: string;
+
 		/**
 		 * The icon path or [ThemeIcon](#ThemeIcon) for the tree item.
 		 * When `falsy`, [Folder Theme Icon](#ThemeIcon.Folder) is assigned, if item is collapsible otherwise [File Theme Icon](#ThemeIcon.File).
