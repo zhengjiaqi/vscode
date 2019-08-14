@@ -237,6 +237,7 @@ export class MenuEntryActionViewItem extends ActionViewItem {
 
 		if (item.iconLocation) {
 			let iconClass: string;
+			let iconClassName: string;
 
 			const iconPathMapKey = item.iconLocation.dark.toString();
 
@@ -244,8 +245,9 @@ export class MenuEntryActionViewItem extends ActionViewItem {
 				iconClass = MenuEntryActionViewItem.ICON_PATH_TO_CSS_RULES.get(iconPathMapKey)!;
 			} else {
 				iconClass = ids.nextId();
-				if (item.iconName) {
-					iconClass = iconClass + ' codicon-' + item.iconName;
+				iconClassName = String(item.iconName);
+				if (iconClassName) {
+					iconClass = iconClass + ' codicon-' + iconClassName;
 				}
 
 				createCSSRule(`.icons.${iconClass}`, `background-image: url("${asDomUri(item.iconLocation.light || item.iconLocation.dark).toString()}")`);
@@ -254,7 +256,8 @@ export class MenuEntryActionViewItem extends ActionViewItem {
 			}
 
 			addClasses(this.label, 'codicon', iconClass);
-			this._itemClassDispose.value = toDisposable(() => removeClasses(this.label, 'codicon', iconClass));
+			iconClassName = '';
+			this._itemClassDispose.value = toDisposable(() => removeClasses(this.label, 'codicon', iconClass, iconClassName));
 		}
 	}
 }
