@@ -298,7 +298,7 @@ export class ActivityActionViewItem extends BaseActionViewItem {
 	}
 
 	protected updateLabel(): void {
-		this.label.className = 'action-label';
+		this.label.className = 'action-label codicon';
 		if (this.activity.cssClass) {
 			dom.addClass(this.label, this.activity.cssClass);
 		}

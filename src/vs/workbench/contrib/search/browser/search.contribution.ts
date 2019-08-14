@@ -507,7 +507,7 @@ Registry.as<ViewletRegistry>(ViewletExtensions.Viewlets).registerViewlet(new Vie
 	SearchViewlet,
 	VIEWLET_ID,
 	nls.localize('name', "Search"),
-	'search',
+	'codicon-search',
 	1
 ));
 

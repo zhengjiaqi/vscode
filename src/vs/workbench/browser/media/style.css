@@ -226,3 +226,11 @@ body.web {
 .monaco-workbench .monaco-list:focus {
 	outline: 0 !important; /* tree indicates focus not via outline but through the focused item */
 }
+
+.activitybar .codicon {
+	color: inherit !important;
+}
+
+.activitybar .badge[class*='codicon-']::before {
+	content: ''
+}

@@ -22,7 +22,7 @@ import { ActivityAction, ActivityActionViewItem, ICompositeBar, ICompositeBarCol
 import { ViewletDescriptor } from 'vs/workbench/browser/viewlet';
 import { Extensions as ActionExtensions, IWorkbenchActionRegistry } from 'vs/workbench/common/actions';
 import { IActivity } from 'vs/workbench/common/activity';
-import { ACTIVITY_BAR_FOREGROUND } from 'vs/workbench/common/theme';
+import { ACTIVITY_BAR_FOREGROUND, ACTIVITY_BAR_INACTIVE_FOREGROUND } from 'vs/workbench/common/theme';
 import { IActivityBarService } from 'vs/workbench/services/activityBar/browser/activityBarService';
 import { IWorkbenchLayoutService, Parts } from 'vs/workbench/services/layout/browser/layoutService';
 import { IViewletService } from 'vs/workbench/services/viewlet/browser/viewlet';
@@ -266,10 +266,26 @@ registerThemingParticipant((theme: ITheme, collector: ICssStyleCollector) => {
 	const activeForegroundColor = theme.getColor(ACTIVITY_BAR_FOREGROUND);
 	if (activeForegroundColor) {
 		collector.addRule(`
-			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item.active .action-label,
-			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item:focus .action-label,
-			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item:hover .action-label {
+			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item.checked .action-label,
+			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item .action-label:focus,
+			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item .action-label:hover{
 				background-color: ${activeForegroundColor} !important;
+			}
+			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item.checked a[class*='codicon-'],
+			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item a[class*='codicon-']:focus,
+			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item a[class*='codicon-']:hover {
+				color: ${activeForegroundColor} !important;
+				background-color: transparent !important;
+			}
+		`);
+	}
+
+	const inactiveForegroundColor = theme.getColor(ACTIVITY_BAR_INACTIVE_FOREGROUND);
+	if (inactiveForegroundColor) {
+		collector.addRule(`
+			.monaco-workbench .activitybar > .content .monaco-action-bar .action-item a[class*='codicon-']{
+				color: ${inactiveForegroundColor} !important;
+				background-color: transparent !important;
 			}
 		`);
 	}

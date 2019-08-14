@@ -80,7 +80,7 @@ const viewletDescriptor = new ViewletDescriptor(
 	ExtensionsViewlet,
 	VIEWLET_ID,
 	localize('extensions', "Extensions"),
-	'extensions',
+	'codicon-extensions',
 	4
 );
 
