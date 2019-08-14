@@ -444,6 +444,12 @@ export class ExtHostTask implements ExtHostTaskShape {
 			if (dto === undefined) {
 				return Promise.reject(new Error('Task is not valid'));
 			}
+			if (CustomExecution2DTO.is(dto.execution)) {
+				// The ID is calculated on the main thread task side, so, let's call into it here.
+				// We need the task id's pre-computed for custom task executions because when OnDidStartTask
+				// is invoked, we have to be able to map it back to our data.
+				await this.addCustomExecution2(dto, <vscode.Task2>task);
+			}
 			return this._proxy.$executeTask(dto).then(value => this.getTaskExecution(value, task));
 		}
 	}
@@ -528,11 +534,6 @@ export class ExtHostTask implements ExtHostTaskShape {
 		if (!handler) {
 			return Promise.reject(new Error('no handler found'));
 		}
-
-		// For custom execution tasks, we need to store the execution objects locally
-		// since we obviously cannot send callback functions through the proxy.
-		// So, clear out any existing ones.
-		this._providedCustomExecutions2.clear();
 
 		// Set up a list of task ID promises that we can wait on
 		// before returning the provided tasks. The ensures that
