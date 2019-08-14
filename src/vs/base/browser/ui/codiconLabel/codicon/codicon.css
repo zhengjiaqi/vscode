@@ -5,8 +5,8 @@
 
 @font-face {
 	font-family: "codicon";
-	src: url("./codicon.ttf?32601c57163dc3e0f07c31979fbcfb3c") format("truetype"),
-url("./codicon.svg?32601c57163dc3e0f07c31979fbcfb3c#codicon") format("svg");
+	src: url("./codicon.ttf?1daf71be6458c5d90907ce3d187ef315") format("truetype"),
+url("./codicon.svg?1daf71be6458c5d90907ce3d187ef315#codicon") format("svg");
 }
 
 .codicon {
