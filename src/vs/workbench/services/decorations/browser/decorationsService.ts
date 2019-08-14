@@ -77,7 +77,7 @@ class DecorationRule {
 		// bubble badge
 		createCSSRule(
 			`.${this.bubbleBadgeClassName}::after`,
-			`content: "\uf052"; color: ${getColor(theme, color)}; font-family: octicons; font-size: 14px; padding-right: 14px; opacity: 0.4;`,
+			`content: "\uea71"; color: ${getColor(theme, color)}; font-family: codicon; font-size: 14px; padding-right: 10px; opacity: 0.4;`,
 			element
 		);
 	}

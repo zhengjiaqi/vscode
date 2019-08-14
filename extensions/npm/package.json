@@ -80,6 +80,7 @@
       {
         "command": "npm.refresh",
         "title": "%command.refresh%",
+        "iconName": "refresh",
         "icon": {
           "light": "resources/light/refresh.svg",
           "dark": "resources/dark/refresh.svg"

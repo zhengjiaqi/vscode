@@ -392,7 +392,7 @@ export abstract class AbstractSettingRenderer extends Disposable implements ITre
 			toggleMenuTitle
 		});
 		toolbar.setActions([], this.settingActions)();
-		const button = container.querySelector('.toolbar-toggle-more');
+		const button = container.querySelector('.codicon-more');
 		if (button) {
 			(<HTMLElement>button).tabIndex = -1;
 		}
@@ -1186,7 +1186,7 @@ export class SettingTreeRenderers {
 	}
 
 	showContextMenu(element: SettingsTreeSettingElement, settingDOMElement: HTMLElement): void {
-		const toolbarElement = settingDOMElement.querySelector('.toolbar-toggle-more');
+		const toolbarElement = settingDOMElement.querySelector('.codicon-more');
 		if (toolbarElement) {
 			this._contextMenuService.showContextMenu({
 				getActions: () => this.settingActions,

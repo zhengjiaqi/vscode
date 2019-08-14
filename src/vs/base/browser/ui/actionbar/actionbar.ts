@@ -250,7 +250,7 @@ export class ActionViewItem extends BaseActionViewItem {
 		super.render(container);
 
 		if (this.element) {
-			this.label = DOM.append(this.element, DOM.$('a.action-label'));
+			this.label = DOM.append(this.element, DOM.$('a.action-label.codicon'));
 		}
 		if (this._action.id === Separator.ID) {
 			this.label.setAttribute('role', 'presentation'); // A separator is a presentation item

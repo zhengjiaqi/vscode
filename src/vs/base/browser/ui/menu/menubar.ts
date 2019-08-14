@@ -294,7 +294,7 @@ export class MenuBar extends Disposable {
 	createOverflowMenu(): void {
 		const label = nls.localize('mMore', "...");
 		const buttonElement = $('div.menubar-menu-button', { 'role': 'menuitem', 'tabindex': -1, 'aria-label': label, 'aria-haspopup': true });
-		const titleElement = $('div.menubar-menu-title.toolbar-toggle-more', { 'role': 'none', 'aria-hidden': true });
+		const titleElement = $('div.menubar-menu-title.codicon-more', { 'role': 'none', 'aria-hidden': true });
 
 		buttonElement.appendChild(titleElement);
 		this.container.appendChild(buttonElement);
