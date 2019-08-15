@@ -237,27 +237,32 @@ export class MenuEntryActionViewItem extends ActionViewItem {
 
 		if (item.iconLocation) {
 			let iconClass: string;
-			let iconClassName: string;
+			let iconClassName: any;
 
 			const iconPathMapKey = item.iconLocation.dark.toString();
 
 			if (MenuEntryActionViewItem.ICON_PATH_TO_CSS_RULES.has(iconPathMapKey)) {
 				iconClass = MenuEntryActionViewItem.ICON_PATH_TO_CSS_RULES.get(iconPathMapKey)!;
 			} else {
+
 				iconClass = ids.nextId();
-				iconClassName = String(item.iconName);
-				if (iconClassName) {
-					iconClass = iconClass + ' codicon-' + iconClassName;
+				iconClassName = item.iconName;
+				console.log(iconClass);
+
+				if (typeof iconClassName !== 'undefined') {
+					console.log('## iconClassName');
+					iconClassName = 'codicon-' + iconClassName;
 				}
 
 				createCSSRule(`.icons.${iconClass}`, `background-image: url("${asDomUri(item.iconLocation.light || item.iconLocation.dark).toString()}")`);
 				createCSSRule(`.vs-dark .icon.${iconClass}, .hc-black .icon.${iconClass}`, `background-image: url("${asDomUri(item.iconLocation.dark).toString()}")`);
 				MenuEntryActionViewItem.ICON_PATH_TO_CSS_RULES.set(iconPathMapKey, iconClass);
 			}
+			console.log(iconClass);
 
 			addClasses(this.label, 'codicon', iconClass);
-			iconClassName = '';
-			this._itemClassDispose.value = toDisposable(() => removeClasses(this.label, 'codicon', iconClass, iconClassName));
+			addClasses(this.label, 'codicon', iconClass);
+			this._itemClassDispose.value = toDisposable(() => removeClasses(this.label, 'codicon', iconClass));
 		}
 	}
 }
