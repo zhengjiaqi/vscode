@@ -551,7 +551,19 @@ const generateVSCodeConfigurationTask = task.define('generate-vscode-configurati
 		const extensionsDir = path.join(os.tmpdir(), 'tmpextdir');
 		const appName = process.env.VSCODE_QUALITY === 'insider' ? 'Visual\\ Studio\\ Code\\ -\\ Insiders.app' : 'Visual\\ Studio\\ Code.app';
 		const appPath = path.join(buildDir, `VSCode-darwin/${appName}/Contents/Resources/app/bin/code`);
-		const codeProc = cp.exec(`${appPath} --export-default-configuration='${allConfigDetailsPath}' --wait --user-data-dir='${userDataDir}' --extensions-dir='${extensionsDir}'`);
+		const codeProc = cp.exec(`${appPath} --export-default-configuration='${allConfigDetailsPath}' --wait --user-data-dir='${userDataDir}' --extensions-dir='${extensionsDir}'`, (err, stdout, stderr) => {
+			if (err) {
+				console.error('err: ' + err.message);
+			}
+
+			if (stdout) {
+				console.log('stdout: ' + stdout);
+			}
+
+			if (stderr) {
+				console.log('stderr: ' + stderr);
+			}
+		});
 
 		const timer = setTimeout(() => {
 			codeProc.kill();

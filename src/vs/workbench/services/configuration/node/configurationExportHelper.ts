@@ -34,6 +34,7 @@ export class DefaultConfigurationExportHelper {
 		@IExtensionService private readonly extensionService: IExtensionService,
 		@ICommandService private readonly commandService: ICommandService) {
 		if (environmentService.args['export-default-configuration']) {
+			console.log('export config 3');
 			this.writeConfigModelAndQuit(environmentService.args['export-default-configuration']);
 		}
 	}
@@ -42,10 +43,11 @@ export class DefaultConfigurationExportHelper {
 		return Promise.resolve(this.extensionService.whenInstalledExtensionsRegistered())
 			.then(() => this.writeConfigModel(targetPath))
 			.then(() => this.commandService.executeCommand('workbench.action.quit'))
-			.then(() => { });
+			.then(() => { console.log('export config 5'); });
 	}
 
 	private writeConfigModel(targetPath: string): Promise<void> {
+		console.log('export config 4');
 		const config = this.getConfigModel();
 
 		const resultString = JSON.stringify(config, undefined, '  ');
