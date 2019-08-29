@@ -45,6 +45,7 @@ import { FileLogService } from 'vs/platform/log/common/fileLogService';
 import { toLocalISOString } from 'vs/base/common/date';
 import { IndexedDBLogProvider } from 'vs/workbench/services/log/browser/indexedDBLogProvider';
 import { InMemoryLogProvider } from 'vs/workbench/services/log/common/inMemoryLogProvider';
+import { FetchFileSystemProvider } from 'vs/workbench/services/extensions/browser/webWorkerFileSystemProvider';
 
 class CodeRendererMain extends Disposable {
 
@@ -196,6 +197,10 @@ class CodeRendererMain extends Disposable {
 			const fileLogService = new FileLogService('window', environmentService.logFile, logService.getLevel(), fileService);
 			logService.logger = new MultiplexLogService([consoleLogService, fileLogService]);
 		})();
+
+		const provider = new FetchFileSystemProvider();
+		fileService.registerProvider(Schemas.http, provider);
+		fileService.registerProvider(Schemas.https, provider);
 
 		const connection = remoteAgentService.getConnection();
 		if (connection) {

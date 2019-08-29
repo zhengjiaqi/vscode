@@ -23,8 +23,6 @@ import { URI } from 'vs/base/common/uri';
 import { isWebExtension } from 'vs/workbench/services/extensions/common/extensionsUtil';
 import { IConfigurationService } from 'vs/platform/configuration/common/configuration';
 import { ExtensionIdentifier } from 'vs/platform/extensions/common/extensions';
-import { FetchFileSystemProvider } from 'vs/workbench/services/extensions/browser/webWorkerFileSystemProvider';
-import { Schemas } from 'vs/base/common/network';
 import { DisposableStore } from 'vs/base/common/lifecycle';
 import { IStaticExtensionsService } from 'vs/workbench/services/extensions/common/staticExtensions';
 import { DeltaExtensionsResult } from 'vs/workbench/services/extensions/common/extensionDescriptionRegistry';
@@ -57,18 +55,11 @@ export class ExtensionService extends AbstractExtensionService implements IExten
 		);
 
 		this._initialize();
-		this._initFetchFileSystem();
 	}
 
 	dispose(): void {
 		this._disposables.dispose();
 		super.dispose();
-	}
-
-	private _initFetchFileSystem(): void {
-		const provider = new FetchFileSystemProvider();
-		this._disposables.add(this._fileService.registerProvider(Schemas.http, provider));
-		this._disposables.add(this._fileService.registerProvider(Schemas.https, provider));
 	}
 
 	private _createProvider(remoteAuthority: string): IInitDataProvider {

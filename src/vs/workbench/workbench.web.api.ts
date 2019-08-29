@@ -66,7 +66,7 @@ export interface IWorkbenchConstructionOptions {
 	/**
 	 * Experimental: Add static extensions that cannot be uninstalled but only be disabled.
 	 */
-	staticExtensions?: { packageJSON: IExtensionManifest, extensionLocation: UriComponents }[];
+	staticExtensions?: { extensionLocation: UriComponents | string, packageJSON?: IExtensionManifest, packageJSONOverrides?: IExtensionManifest }[];
 
 	/**
 	 * Experimental: Support for URL callbacks.
