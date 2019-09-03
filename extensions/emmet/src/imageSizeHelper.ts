@@ -10,7 +10,7 @@ import * as path from 'path';
 import * as http from 'http';
 import * as https from 'https';
 import { parse as parseUrl } from 'url';
-import * as sizeOf from 'image-size';
+import sizeOf from 'image-size';
 
 const reUrl = /^https?:/;
 
