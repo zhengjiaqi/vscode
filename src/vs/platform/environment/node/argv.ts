@@ -93,6 +93,7 @@ export const OPTIONS: OptionDescriptions<Required<ParsedArgs>> = {
 	'logExtensionHostCommunication': { type: 'boolean' },
 	'skip-getting-started': { type: 'boolean' },
 	'skip-release-notes': { type: 'boolean' },
+	'use-file-scheme': { type: 'boolean' },
 	'sticky-quickopen': { type: 'boolean' },
 	'disable-restore-windows': { type: 'boolean' },
 	'disable-telemetry': { type: 'boolean' },

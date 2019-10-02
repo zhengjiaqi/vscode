@@ -570,6 +570,7 @@ class UserKeybindings extends Disposable {
 	) {
 		super();
 
+		this._register(this.fileService.watch(this.keybindingsResource));
 		this.reloadConfigurationScheduler = this._register(new RunOnceScheduler(() => this.reload().then(changed => {
 			if (changed) {
 				this._onDidChange.fire();

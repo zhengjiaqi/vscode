@@ -50,7 +50,7 @@ suite('FileUserDataProvider', () => {
 		const environmentService = new BrowserWorkbenchEnvironmentService({ remoteAuthority: 'remote', workspaceId: 'workspaceId', logsPath: URI.file('logFile') });
 		environmentService.userRoamingDataHome = userDataResource;
 
-		const userDataFileSystemProvider = new FileUserDataProvider(URI.file(userDataPath), URI.file(backupsPath), diskFileSystemProvider, environmentService);
+		const userDataFileSystemProvider = new FileUserDataProvider(URI.file(userDataPath), URI.file(backupsPath), diskFileSystemProvider, environmentService, new NullLogService());
 		disposables.add(userDataFileSystemProvider);
 		disposables.add(testObject.registerProvider(Schemas.userData, userDataFileSystemProvider));
 	});
@@ -324,7 +324,7 @@ suite('FileUserDataProvider - Watching', () => {
 		const environmentService = new BrowserWorkbenchEnvironmentService({ remoteAuthority: 'remote', workspaceId: 'workspaceId', logsPath: URI.file('logFile') });
 		environmentService.userRoamingDataHome = userDataResource;
 
-		const userDataFileSystemProvider = new FileUserDataProvider(localUserDataResource, localBackupsResource, new TestFileSystemProvider(fileEventEmitter.event), environmentService);
+		const userDataFileSystemProvider = new FileUserDataProvider(localUserDataResource, localBackupsResource, new TestFileSystemProvider(fileEventEmitter.event), environmentService, new NullLogService());
 		disposables.add(userDataFileSystemProvider);
 
 		testObject = new FileService(new NullLogService());

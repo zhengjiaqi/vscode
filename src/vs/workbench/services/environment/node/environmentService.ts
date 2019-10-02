@@ -41,7 +41,7 @@ export class WorkbenchEnvironmentService extends EnvironmentService implements I
 	get skipReleaseNotes(): boolean { return !!this.args['skip-release-notes']; }
 
 	@memoize
-	get userRoamingDataHome(): URI { return this.appSettingsHome.with({ scheme: Schemas.userData }); }
+	get userRoamingDataHome(): URI { return !!this.args['use-file-scheme'] ? this.appSettingsHome : this.appSettingsHome.with({ scheme: Schemas.userData }); }
 
 	@memoize
 	get logFile(): URI { return URI.file(join(this.logsPath, `renderer${this.windowId}.log`)); }

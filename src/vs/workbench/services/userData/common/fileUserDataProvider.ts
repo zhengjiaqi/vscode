@@ -5,12 +5,13 @@
 
 import { Event, Emitter } from 'vs/base/common/event';
 import { Disposable, IDisposable } from 'vs/base/common/lifecycle';
-import { IFileSystemProviderWithFileReadWriteCapability, IFileChange, IWatchOptions, IStat, FileOverwriteOptions, FileType, FileWriteOptions, FileDeleteOptions, FileSystemProviderCapabilities, IFileSystemProviderWithOpenReadWriteCloseCapability, FileOpenOptions, hasReadWriteCapability, hasOpenReadWriteCloseCapability } from 'vs/platform/files/common/files';
+import { IFileSystemProviderWithFileReadWriteCapability, IFileChange, IWatchOptions, IStat, FileOverwriteOptions, FileType, FileWriteOptions, FileDeleteOptions, FileSystemProviderCapabilities, IFileSystemProviderWithOpenReadWriteCloseCapability, FileOpenOptions, hasReadWriteCapability, hasOpenReadWriteCloseCapability, FileChangeType } from 'vs/platform/files/common/files';
 import { URI } from 'vs/base/common/uri';
 import * as resources from 'vs/base/common/resources';
 import { startsWith } from 'vs/base/common/strings';
 import { BACKUPS } from 'vs/platform/environment/common/environment';
 import { IWorkbenchEnvironmentService } from 'vs/workbench/services/environment/common/environmentService';
+import { ILogService } from 'vs/platform/log/common/log';
 
 export class FileUserDataProvider extends Disposable implements IFileSystemProviderWithFileReadWriteCapability, IFileSystemProviderWithOpenReadWriteCloseCapability {
 
@@ -26,7 +27,8 @@ export class FileUserDataProvider extends Disposable implements IFileSystemProvi
 		private readonly fileSystemUserDataHome: URI,
 		private readonly fileSystemBackupsHome: URI,
 		private readonly fileSystemProvider: IFileSystemProviderWithFileReadWriteCapability | IFileSystemProviderWithOpenReadWriteCloseCapability,
-		environmentService: IWorkbenchEnvironmentService
+		environmentService: IWorkbenchEnvironmentService,
+		private readonly logService: ILogService,
 	) {
 		super();
 
@@ -106,8 +108,10 @@ export class FileUserDataProvider extends Disposable implements IFileSystemProvi
 	private handleFileChanges(changes: readonly IFileChange[]): void {
 		const userDataChanges: IFileChange[] = [];
 		for (const change of changes) {
+			this.logService.info('Handling change from file', change.resource.toString(), change.type === FileChangeType.ADDED ? 'added' : change.type === FileChangeType.UPDATED ? 'updated' : 'removed');
 			const userDataResource = this.toUserDataResource(change.resource);
 			if (userDataResource) {
+				this.logService.info('User Data Resource: ', change.resource.toString(), change.type === FileChangeType.ADDED ? '[ADDED]' : change.type === FileChangeType.UPDATED ? ['UPDATED'] : '[REMOVED]');
 				userDataChanges.push({
 					resource: userDataResource,
 					type: change.type

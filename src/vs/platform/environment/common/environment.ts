@@ -79,6 +79,8 @@ export interface ParsedArgs {
 	'js-flags'?: string;
 	'disable-gpu'?: boolean;
 	'nolazy'?: boolean;
+
+	'use-file-scheme'?: boolean;
 }
 
 export const IEnvironmentService = createDecorator<IEnvironmentService>('environmentService');
