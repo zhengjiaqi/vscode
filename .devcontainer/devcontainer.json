@@ -1,0 +1,22 @@
+{
+	"name": "VS Code Development",
+	"dockerFile": "Dockerfile",
+
+	"settings": {
+		// zsh is also available
+		"terminal.integrated.shell.linux": "/bin/bash",
+
+		"remote.extensionKind": {
+			"msjsdiag.debugger-for-chrome": "workspace"
+		}
+	},
+
+	"overrideCommand": false,
+
+	"extensions": [
+		"ms-vscode.vscode-typescript-tslint-plugin",
+		"dbaeumer.vscode-eslint",
+		"EditorConfig.EditorConfig",
+		"msjsdiag.debugger-for-chrome"
+	]
+}
