@@ -11,6 +11,34 @@
 		}
 	},
 
+	// ** WINDOWS SETUP **
+	//
+	// 1. Install VcXsrv or MobaXterm on your host.
+	// 2. After installing start VcXsrv / MobaXterm.
+	// 3. Open this repo in a container.
+
+	// ** MACOS SETUP **
+	//
+	// 1. Install XQuartz.
+	// 2. Start XQuartz, go to XQuartz => Preferences => Security tab and
+	//    check "Allow connections from network clients".
+	// 3. Shut down XQuartz.
+	// 4. Whenver you want to use this repo from a container, open a terminal
+	//    and run "xhost +localhost" from so that Docker can access XQuartz.
+	// 5. Finally, open this repo in a container.
+
+	// ** LINUX SETUP ***
+	//
+	// 1. Open .devcontainer/Dockerfile and be sure USER_UID and USER_GID
+	//    match your local user.(Run "id" from a terminal find these values.)
+	// 2. If you hit a problem with the display not being found, you may have
+	//    to run "xhost +local:root" on your host to allow Docker to access
+	//    the display.
+	// 3. Uncomment "runArgs" below and open (or rebuild if already opened)
+	//    this repo in the dev container.
+	//
+	// "runArgs": [ "-v", "/tmp/.X11-unix:/tmp/.X11-unix", "-v", "/dev/snd:/dev/snd", "-e", "DISPLAY=unix${env:DISPLAY}" ],
+
 	"overrideCommand": false,
 
 	"extensions": [
