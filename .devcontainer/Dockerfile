@@ -62,8 +62,6 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-COPY on-start.sh /home/node
-
 # Default to non-root user
 USER node
 
@@ -71,4 +69,4 @@ USER node
 ENV DEBIAN_FRONTEND=
 
 # Start dbus on boot
-CMD ["/bin/bash", "/home/node/on-start.sh"]
+CMD ["/bin/bash", "-c", "sudo dbus-daemon --system; dbus-daemon --session --address=unix:abstract=/tmp/dbus-session; sleep infinity"]
