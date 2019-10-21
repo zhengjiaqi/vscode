@@ -818,12 +818,12 @@ export abstract class AbstractTaskService extends Disposable implements ITaskSer
 		return Promise.resolve(task);
 	}
 
-	public getTasksForGroup(group: string): Promise<Task[]> {
+	public getTasksForGroup(group: TaskGroup): Promise<Task[]> {
 		return this.getGroupedTasks().then((groups) => {
 			let result: Task[] = [];
 			groups.forEach((tasks) => {
 				for (let task of tasks) {
-					if (task.configurationProperties.group === group) {
+					if (task.configurationProperties.group?._id === group._id) {
 						result.push(task);
 					}
 				}

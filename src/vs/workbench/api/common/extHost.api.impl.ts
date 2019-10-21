@@ -886,6 +886,7 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			Task: extHostTypes.Task,
 			Task2: extHostTypes.Task,
 			TaskGroup: extHostTypes.TaskGroup,
+			TaskGroup2: extHostTypes.TaskGroup,
 			TaskPanelKind: extHostTypes.TaskPanelKind,
 			TaskRevealKind: extHostTypes.TaskRevealKind,
 			TaskScope: extHostTypes.TaskScope,

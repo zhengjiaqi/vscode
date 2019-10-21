@@ -1202,7 +1202,7 @@ const partialSource: Partial<Tasks.TaskSource> = {
 };
 
 namespace GroupKind {
-	export function from(this: void, external: string | GroupKind | undefined): [string, Tasks.GroupType] | undefined {
+	export function from(this: void, external: string | GroupKind | undefined): [Tasks.TaskGroup, Tasks.GroupType] | undefined {
 		if (external === undefined) {
 			return undefined;
 		}
@@ -1219,7 +1219,7 @@ namespace GroupKind {
 		let group: string = external.kind;
 		let isDefault: boolean = !!external.isDefault;
 
-		return [group, isDefault ? Tasks.GroupType.default : Tasks.GroupType.user];
+		return [{ _id: group, isDefault }, isDefault ? Tasks.GroupType.default : Tasks.GroupType.user];
 	}
 }
 
@@ -1290,7 +1290,7 @@ namespace ConfigurationProperties {
 			result.promptOnClose = !!external.promptOnClose;
 		}
 		if (external.group !== undefined) {
-			if (Types.isString(external.group) && Tasks.TaskGroup.is(external.group)) {
+			if ((external.group as Tasks.TaskGroup) && Tasks.TaskGroup.is(external.group)) {
 				result.group = external.group;
 				result.groupType = Tasks.GroupType.user;
 			} else {

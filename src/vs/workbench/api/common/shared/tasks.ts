@@ -81,6 +81,11 @@ export interface TaskHandleDTO {
 	workspaceFolder: UriComponents;
 }
 
+export interface TaskGroupDTO {
+	_id: string;
+	isDefault?: boolean;
+}
+
 export interface TaskDTO {
 	_id: string;
 	name?: string;
@@ -88,7 +93,7 @@ export interface TaskDTO {
 	definition: TaskDefinitionDTO;
 	isBackground?: boolean;
 	source: TaskSourceDTO;
-	group?: string;
+	group?: TaskGroupDTO;
 	presentationOptions?: TaskPresentationOptionsDTO;
 	problemMatchers: string[];
 	hasDefinedMatchers: boolean;

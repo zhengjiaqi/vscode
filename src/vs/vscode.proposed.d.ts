@@ -934,14 +934,22 @@ declare module 'vscode' {
 		 */
 		execution2?: ProcessExecution | ShellExecution | CustomExecution;
 	}
-	//#endregion
 
-	//#region Tasks
 	export interface TaskPresentationOptions {
 		/**
 		 * Controls whether the task is executed in a specific terminal group using split panes.
 		 */
 		group?: string;
+	}
+
+	export class TaskGroup2 {
+		static Clean: TaskGroup2;
+		static Build: TaskGroup2;
+		static Rebuild: TaskGroup2;
+		static Test: TaskGroup2;
+		readonly isDefault?: boolean;
+		readonly id: string;
+		private constructor(id: string, label: string);
 	}
 	//#endregion
 
