@@ -5,8 +5,6 @@
 
 'use strict';
 
-const json = require('gulp-json-editor');
-const buffer = require('gulp-buffer');
 const filter = require('gulp-filter');
 const es = require('event-stream');
 const vfs = require('vinyl-fs');
@@ -21,16 +19,10 @@ function main() {
 		return;
 	}
 
-	const productJsonFilter = filter('product.json', { restore: true });
-
 	fancyLog(ansiColors.blue('[mixin]'), `Mixing in sources:`);
 	return vfs
 		.src(`quality/${quality}/**`, { base: `quality/${quality}` })
 		.pipe(filter(f => !f.isDirectory()))
-		.pipe(productJsonFilter)
-		.pipe(buffer())
-		.pipe(json(o => Object.assign({}, require('../product.json'), o)))
-		.pipe(productJsonFilter.restore)
 		.pipe(es.mapSync(function (f) {
 			fancyLog(ansiColors.blue('[mixin]'), f.relative, ansiColors.green('✔︎'));
 			return f;
