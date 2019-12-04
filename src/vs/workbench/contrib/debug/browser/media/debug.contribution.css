@@ -17,6 +17,7 @@
 }
 
 /* overlapped icons */
+.cgmr.codicon-debug-breakpoint-and-stackframe::after,
 .inline-breakpoint-widget.codicon-debug-breakpoint-stackframe-dot::after {
 	position: absolute;
 	top: 0;
@@ -24,6 +25,14 @@
 	bottom: 0;
 	margin: auto;
 	display: table;
+}
+
+.cgmr:not([class*='codicon-debug-breakpoint-stackframe-dot']).codicon-debug-breakpoint-and-stackframe::after {
+	content: "\eb8a";
+}
+
+.cgmr.codicon-debug-breakpoint-and-stackframe::after {
+	left: 1px;
 }
 
 .codicon-debug-breakpoint.codicon-debug-breakpoint-stackframe-focused::after {

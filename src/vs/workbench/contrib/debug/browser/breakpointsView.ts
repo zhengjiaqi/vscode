@@ -725,7 +725,7 @@ export function getBreakpointMessageAndClassName(debugService: IDebugService, br
 				};
 			} else if (breakpoint.column === undefined) {
 				return {
-					className: 'codicon-debug-breakpoint',
+					className: 'codicon-debug-breakpoint-and-stackframe',
 					message: breakpoint.message || nls.localize('breakpoint', "Breakpoint")
 				};
 			}
