@@ -27,6 +27,7 @@ import { StopWatch } from 'vs/base/common/stopwatch';
 import { VSBuffer } from 'vs/base/common/buffer';
 import { IExtensionHostStarter } from 'vs/workbench/services/extensions/common/extensions';
 import { ExtensionActivationReason } from 'vs/workbench/api/common/extHostExtensionActivator';
+import { ILogService } from 'vs/platform/log/common/log';
 
 // Enable to see detailed message communication between window and extension host
 const LOG_EXTENSION_HOST_COMMUNICATION = false;
@@ -82,7 +83,7 @@ export class ExtensionHostProcessManager extends Disposable {
 		this._extensionHostProcessProxy.then(() => {
 			initialActivationEvents.forEach((activationEvent) => this.activateByEvent(activationEvent));
 			this._register(registerLatencyTestProvider({
-				measure: () => this.measure()
+				measure: (speed: boolean) => this.measure(speed)
 			}));
 		});
 		this._resolveAuthorityAttempt = 0;
@@ -108,14 +109,14 @@ export class ExtensionHostProcessManager extends Disposable {
 		super.dispose();
 	}
 
-	private async measure(): Promise<ExtHostLatencyResult | null> {
+	private async measure(speed: boolean): Promise<ExtHostLatencyResult | null> {
 		const proxy = await this._getExtensionHostProcessProxy();
 		if (!proxy) {
 			return null;
 		}
 		const latency = await this._measureLatency(proxy);
-		const down = await this._measureDown(proxy);
-		const up = await this._measureUp(proxy);
+		const down = speed ? await this._measureDown(proxy) : 0;
+		const up = speed ? await this._measureUp(proxy) : 0;
 		return {
 			remoteAuthority: this._remoteAuthority,
 			latency,
@@ -367,7 +368,7 @@ interface ExtHostLatencyResult {
 }
 
 interface ExtHostLatencyProvider {
-	measure(): Promise<ExtHostLatencyResult | null>;
+	measure(speed: boolean): Promise<ExtHostLatencyResult | null>;
 }
 
 let providers: ExtHostLatencyProvider[] = [];
@@ -402,7 +403,7 @@ export class MeasureExtHostLatencyAction extends Action {
 	}
 
 	public async run(): Promise<any> {
-		const measurements = await Promise.all(getLatencyTestProviders().map(provider => provider.measure()));
+		const measurements = await Promise.all(getLatencyTestProviders().map(provider => provider.measure(true)));
 		this._editorService.openEditor({ contents: measurements.map(MeasureExtHostLatencyAction._print).join('\n\n'), options: { pinned: true } } as IUntitledTextResourceInput);
 	}
 
@@ -424,5 +425,34 @@ export class MeasureExtHostLatencyAction extends Action {
 	}
 }
 
+export class MeasureExtHostLatencyAction2 extends Action {
+	public static readonly ID = 'editor.action.measureExtHostLatency2';
+	public static readonly LABEL = nls.localize('measureExtHostLatency2', "Measure Extension Host Latency (debug: 1 minute)");
+
+	constructor(
+		id: string,
+		label: string,
+		@ILogService private logService: ILogService
+	) {
+		super(id, label);
+	}
+
+	public async run(): Promise<any> {
+		let cnt = 0;
+		let internal = setInterval(async () => {
+			cnt++;
+			const measurements = await Promise.all(getLatencyTestProviders().map(provider => provider.measure(false)));
+			measurements.forEach(m => {
+				this.logService.debug(`Latency: measurements ${m?.latency.toFixed(3)}ms`);
+			});
+			if (cnt > 1200) {
+				clearInterval(internal);
+			}
+		}, 50);
+	}
+}
+
 const registry = Registry.as<IWorkbenchActionRegistry>(ActionExtensions.WorkbenchActions);
 registry.registerWorkbenchAction(SyncActionDescriptor.create(MeasureExtHostLatencyAction, MeasureExtHostLatencyAction.ID, MeasureExtHostLatencyAction.LABEL), 'Developer: Measure Extension Host Latency', nls.localize('developer', "Developer"));
+registry.registerWorkbenchAction(SyncActionDescriptor.create(MeasureExtHostLatencyAction2, MeasureExtHostLatencyAction2.ID, MeasureExtHostLatencyAction2.LABEL), 'Developer: Measure Extension Host Latency (debug 1 minute)', nls.localize('developer', "Developer"));
+
