@@ -13,13 +13,11 @@ interface AbstractGlobalsRuleConfig {
 
 export abstract class AbstractGlobalsRuleWalker extends Lint.RuleWalker {
 
-	constructor(file: ts.SourceFile, private program: ts.Program, opts: Lint.IOptions, private _config: AbstractGlobalsRuleConfig) {
+	constructor(file: ts.SourceFile, opts: Lint.IOptions, private _config: AbstractGlobalsRuleConfig) {
 		super(file, opts);
 	}
 
 	protected abstract getDisallowedGlobals(): string[];
-
-	protected abstract getDefinitionPattern(): string;
 
 	visitIdentifier(node: ts.Identifier) {
 		if (this.getDisallowedGlobals().some(disallowedGlobal => disallowedGlobal === node.text)) {
@@ -27,29 +25,7 @@ export abstract class AbstractGlobalsRuleWalker extends Lint.RuleWalker {
 				return; // override
 			}
 
-			const checker = this.program.getTypeChecker();
-			const symbol = checker.getSymbolAtLocation(node);
-			if (symbol) {
-				const declarations = symbol.declarations;
-				if (Array.isArray(declarations) && symbol.declarations.some(declaration => {
-					if (declaration) {
-						const parent = declaration.parent;
-						if (parent) {
-							const sourceFile = parent.getSourceFile();
-							if (sourceFile) {
-								const fileName = sourceFile.fileName;
-								if (fileName && fileName.indexOf(this.getDefinitionPattern()) >= 0) {
-									return true;
-								}
-							}
-						}
-					}
-
-					return false;
-				})) {
-					this.addFailureAtNode(node, `Cannot use global '${node.text}' in '${this._config.target}'`);
-				}
-			}
+			this.addFailureAtNode(node, `Cannot use global '${node.text}' in '${this._config.target}'`);
 		}
 
 		super.visitIdentifier(node);

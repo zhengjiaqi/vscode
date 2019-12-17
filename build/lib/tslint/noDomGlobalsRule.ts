@@ -13,14 +13,14 @@ interface NoDOMGlobalsRuleConfig {
 	allowed: string[];
 }
 
-export class Rule extends Lint.Rules.TypedRule {
+export class Rule extends Lint.Rules.AbstractRule {
 
-	applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
+	apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
 		const configs = <NoDOMGlobalsRuleConfig[]>this.getOptions().ruleArguments;
 
 		for (const config of configs) {
 			if (minimatch(sourceFile.fileName, config.target)) {
-				return this.applyWithWalker(new NoDOMGlobalsRuleWalker(sourceFile, program, this.getOptions(), config));
+				return this.applyWithWalker(new NoDOMGlobalsRuleWalker(sourceFile, this.getOptions(), config));
 			}
 		}
 
@@ -29,10 +29,6 @@ export class Rule extends Lint.Rules.TypedRule {
 }
 
 class NoDOMGlobalsRuleWalker extends AbstractGlobalsRuleWalker {
-
-	getDefinitionPattern(): string {
-		return 'lib.dom.d.ts';
-	}
 
 	getDisallowedGlobals(): string[] {
 		// intentionally not complete

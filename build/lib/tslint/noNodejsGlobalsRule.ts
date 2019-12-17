@@ -13,14 +13,14 @@ interface NoNodejsGlobalsConfig {
 	allowed: string[];
 }
 
-export class Rule extends Lint.Rules.TypedRule {
+export class Rule extends Lint.Rules.AbstractRule {
 
-	applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
+	apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
 		const configs = <NoNodejsGlobalsConfig[]>this.getOptions().ruleArguments;
 
 		for (const config of configs) {
 			if (minimatch(sourceFile.fileName, config.target)) {
-				return this.applyWithWalker(new NoNodejsGlobalsRuleWalker(sourceFile, program, this.getOptions(), config));
+				return this.applyWithWalker(new NoNodejsGlobalsRuleWalker(sourceFile, this.getOptions(), config));
 			}
 		}
 
@@ -29,10 +29,6 @@ export class Rule extends Lint.Rules.TypedRule {
 }
 
 class NoNodejsGlobalsRuleWalker extends AbstractGlobalsRuleWalker {
-
-	getDefinitionPattern(): string {
-		return '@types/node';
-	}
 
 	getDisallowedGlobals(): string[] {
 		// https://nodejs.org/api/globals.html#globals_global_objects

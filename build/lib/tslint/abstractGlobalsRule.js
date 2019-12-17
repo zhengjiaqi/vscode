@@ -6,9 +6,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Lint = require("tslint");
 class AbstractGlobalsRuleWalker extends Lint.RuleWalker {
-    constructor(file, program, opts, _config) {
+    constructor(file, opts, _config) {
         super(file, opts);
-        this.program = program;
         this._config = _config;
     }
     visitIdentifier(node) {
@@ -16,28 +15,7 @@ class AbstractGlobalsRuleWalker extends Lint.RuleWalker {
             if (this._config.allowed && this._config.allowed.some(allowed => allowed === node.text)) {
                 return; // override
             }
-            const checker = this.program.getTypeChecker();
-            const symbol = checker.getSymbolAtLocation(node);
-            if (symbol) {
-                const declarations = symbol.declarations;
-                if (Array.isArray(declarations) && symbol.declarations.some(declaration => {
-                    if (declaration) {
-                        const parent = declaration.parent;
-                        if (parent) {
-                            const sourceFile = parent.getSourceFile();
-                            if (sourceFile) {
-                                const fileName = sourceFile.fileName;
-                                if (fileName && fileName.indexOf(this.getDefinitionPattern()) >= 0) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                    return false;
-                })) {
-                    this.addFailureAtNode(node, `Cannot use global '${node.text}' in '${this._config.target}'`);
-                }
-            }
+            this.addFailureAtNode(node, `Cannot use global '${node.text}' in '${this._config.target}'`);
         }
         super.visitIdentifier(node);
     }
