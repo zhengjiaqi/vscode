@@ -1171,6 +1171,10 @@ interface IEditorPartConfiguration {
 	labelFormat?: 'default' | 'short' | 'medium' | 'long';
 	restoreViewState?: boolean;
 	splitSizing?: 'split' | 'distribute';
+	limit?: {
+		enabled?: boolean;
+		value?: number;
+	};
 }
 
 export interface IEditorPartOptions extends IEditorPartConfiguration {

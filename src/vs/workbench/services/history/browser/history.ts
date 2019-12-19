@@ -7,7 +7,7 @@ import { onUnexpectedError } from 'vs/base/common/errors';
 import { URI, UriComponents } from 'vs/base/common/uri';
 import { IEditor } from 'vs/editor/common/editorCommon';
 import { ITextEditorOptions, IResourceInput, ITextEditorSelection } from 'vs/platform/editor/common/editor';
-import { IEditorInput, IEditor as IBaseEditor, Extensions as EditorExtensions, EditorInput, IEditorCloseEvent, IEditorInputFactoryRegistry, toResource, IEditorIdentifier, GroupIdentifier, Extensions } from 'vs/workbench/common/editor';
+import { IEditorInput, IEditor as IBaseEditor, Extensions as EditorExtensions, EditorInput, IEditorCloseEvent, IEditorInputFactoryRegistry, toResource, IEditorIdentifier, GroupIdentifier, Extensions, IEditorPartOptionsChangeEvent } from 'vs/workbench/common/editor';
 import { IEditorService } from 'vs/workbench/services/editor/common/editorService';
 import { IHistoryService } from 'vs/workbench/services/history/common/history';
 import { FileChangesEvent, IFileService, FileChangeType, FILES_EXCLUDE_CONFIG } from 'vs/platform/files/common/files';
@@ -35,6 +35,7 @@ import { addDisposableListener, EventType, EventHelper } from 'vs/base/browser/d
 import { IWorkspacesService } from 'vs/platform/workspaces/common/workspaces';
 import { Schemas } from 'vs/base/common/network';
 import { LinkedMap, Touch } from 'vs/base/common/map';
+import { equals } from 'vs/base/common/objects';
 
 //#region Text Editor State helper
 
@@ -132,6 +133,7 @@ export class EditorsHistory extends Disposable {
 	private registerListeners(): void {
 		this._register(this.storageService.onWillSaveState(() => this.saveState()));
 		this._register(this.editorGroupsService.onDidAddGroup(group => this.onGroupAdded(group)));
+		this._register(this.editorGroupsService.onDidEditorPartOptionsChange(e => this.onDidEditorPartOptionsChange(e)));
 
 		this.editorGroupsService.whenRestored.then(() => this.loadState());
 	}
@@ -179,9 +181,13 @@ export class EditorsHistory extends Disposable {
 				}
 
 				// Editor opens: put it as second most recent
+				//
+				// Also check for maximum allowed number of editors and
+				// start to close oldest ones if needed.
 				case GroupChangeKind.EDITOR_OPEN: {
 					if (e.editor) {
 						this.addMostRecentEditor(group, e.editor, false /* is not active */);
+						this.ensureOpenedEditorsLimit({ groupId: group.id, editor: e.editor });
 					}
 
 					break;
@@ -200,6 +206,18 @@ export class EditorsHistory extends Disposable {
 
 		// Make sure to cleanup on dispose
 		Event.once(group.onWillDispose)(() => dispose(groupDisposables));
+	}
+
+	private onDidEditorPartOptionsChange(event: IEditorPartOptionsChangeEvent): void {
+		if (!equals(event.newPartOptions.limit, event.oldPartOptions.limit)) {
+			const activeGroup = this.editorGroupsService.activeGroup;
+			let exclude: IEditorIdentifier | undefined = undefined;
+			if (activeGroup.activeEditor) {
+				exclude = { editor: activeGroup.activeEditor, groupId: activeGroup.id };
+			}
+
+			this.ensureOpenedEditorsLimit(exclude);
+		}
 	}
 
 	private addMostRecentEditor(group: IEditorGroup, editor: IEditorInput, isActive: boolean): void {
@@ -269,6 +287,42 @@ export class EditorsHistory extends Disposable {
 		}
 
 		return key;
+	}
+
+	private async ensureOpenedEditorsLimit(exclude?: IEditorIdentifier): Promise<void> {
+		if (!this.editorGroupsService.partOptions.limit?.enabled) {
+			return; // only if enabled
+		}
+
+		if (
+			typeof this.editorGroupsService.partOptions.limit.value !== 'number' ||
+			this.editorGroupsService.partOptions.limit.value <= 0 ||
+			this.editorGroupsService.partOptions.limit.value >= this.mostRecentEditorsMap.size
+		) {
+			return; // only if opened editors exceed setting and is valid
+		}
+
+		// Extract least recently used editors that can be closed
+		const leastRecentlyClosableEditors = this.mostRecentEditorsMap.values().reverse().filter(({ editor, groupId }) => {
+			if (editor.isDirty()) {
+				return false; // not dirty editors
+			}
+
+			if (exclude && editor === exclude.editor && groupId === exclude.groupId) {
+				return false; // never the editor that should be excluded
+			}
+
+			return true;
+		});
+
+		// Close editors until we reached the limit again
+		for (const { editor, groupId } of leastRecentlyClosableEditors) {
+			await this.editorGroupsService.getGroup(groupId)?.closeEditor(editor);
+
+			if (this.editorGroupsService.partOptions.limit.value >= this.mostRecentEditorsMap.size) {
+				break; // limit reached again
+			}
+		}
 	}
 
 	private saveState(): void {
