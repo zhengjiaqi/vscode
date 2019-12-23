@@ -97,7 +97,6 @@
 				"restrictions": [
 					"vs/nls",
 					"**/vs/base/{common,node}/**",
-					"**/vs/base/parts/*/{common,node}/**",
 					"!path" // node modules (except path where we have our own impl)
 				]
 			},
