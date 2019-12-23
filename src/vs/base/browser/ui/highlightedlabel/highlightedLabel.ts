@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as objects from 'vs/base/common/objects';
-import { renderCodicons } from 'vs/base/parts/codicon/common/codicons';
+import { renderCodicons } from 'vs/base/browser/ui/codicon/codicons';
 import { escape } from 'vs/base/common/strings';
 
 export interface IHighlight {
