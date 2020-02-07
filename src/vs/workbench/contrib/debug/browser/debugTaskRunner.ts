@@ -8,7 +8,6 @@ import severity from 'vs/base/common/severity';
 import { Event } from 'vs/base/common/event';
 import Constants from 'vs/workbench/contrib/markers/browser/constants';
 import { ITaskService, ITaskSummary } from 'vs/workbench/contrib/tasks/common/taskService';
-import { IPanelService } from 'vs/workbench/services/panel/common/panelService';
 import { IConfigurationService } from 'vs/platform/configuration/common/configuration';
 import { IWorkspaceFolder, IWorkspace } from 'vs/platform/workspace/common/workspace';
 import { TaskEvent, TaskEventKind, TaskIdentifier } from 'vs/workbench/contrib/tasks/common/tasks';
@@ -18,6 +17,7 @@ import { withUndefinedAsNull } from 'vs/base/common/types';
 import { IMarkerService } from 'vs/platform/markers/common/markers';
 import { IDebugConfiguration } from 'vs/workbench/contrib/debug/common/debug';
 import { createErrorWithActions } from 'vs/base/common/errorsWithActions';
+import { IViewsService } from 'vs/workbench/common/views';
 
 function once(match: (e: TaskEvent) => boolean, event: Event<TaskEvent>): Event<TaskEvent> {
 	return (listener, thisArgs = null, disposables?) => {
@@ -38,17 +38,27 @@ export const enum TaskRunResult {
 
 export class DebugTaskRunner {
 
+	private canceled = false;
+
 	constructor(
 		@ITaskService private readonly taskService: ITaskService,
 		@IMarkerService private readonly markerService: IMarkerService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
-		@IPanelService private readonly panelService: IPanelService,
+		@IViewsService private readonly viewsService: IViewsService,
 		@IDialogService private readonly dialogService: IDialogService,
 	) { }
 
+	cancel(): void {
+		this.canceled = true;
+	}
+
 	async runTaskAndCheckErrors(root: IWorkspaceFolder | IWorkspace | undefined, taskId: string | TaskIdentifier | undefined, onError: (msg: string, actions: IAction[]) => Promise<void>): Promise<TaskRunResult> {
 		try {
+			this.canceled = false;
 			const taskSummary = await this.runTask(root, taskId);
+			if (this.canceled) {
+				return TaskRunResult.Failure;
+			}
 
 			const errorCount = taskId ? this.markerService.getStatistics().errors : 0;
 			const successExitCode = taskSummary && taskSummary.exitCode === 0;
@@ -58,7 +68,7 @@ export class DebugTaskRunner {
 				return TaskRunResult.Success;
 			}
 			if (onTaskErrors === 'showErrors') {
-				this.panelService.openPanel(Constants.MARKERS_PANEL_ID);
+				await this.viewsService.openView(Constants.MARKERS_VIEW_ID);
 				return Promise.resolve(TaskRunResult.Failure);
 			}
 
@@ -87,7 +97,7 @@ export class DebugTaskRunner {
 				return TaskRunResult.Success;
 			}
 
-			this.panelService.openPanel(Constants.MARKERS_PANEL_ID);
+			await this.viewsService.openView(Constants.MARKERS_VIEW_ID);
 			return Promise.resolve(TaskRunResult.Failure);
 		} catch (err) {
 			await onError(err.message, [this.taskService.configureAction()]);
