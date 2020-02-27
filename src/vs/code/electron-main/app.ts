@@ -3,83 +3,84 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { app, ipcMain as ipc, systemPreferences, shell, Event, contentTracing, protocol, powerMonitor, IpcMainEvent, BrowserWindow } from 'electron';
-import { IProcessEnvironment, isWindows, isMacintosh } from 'vs/base/common/platform';
-import { WindowsMainService } from 'vs/platform/windows/electron-main/windowsMainService';
-import { OpenContext, IWindowOpenable } from 'vs/platform/windows/common/windows';
-import { ActiveWindowManager } from 'vs/code/node/activeWindowTracker';
-import { ILifecycleMainService, LifecycleMainPhase } from 'vs/platform/lifecycle/electron-main/lifecycleMainService';
-import { getShellEnvironment } from 'vs/code/node/shellEnv';
-import { IUpdateService } from 'vs/platform/update/common/update';
-import { UpdateChannel } from 'vs/platform/update/electron-main/updateIpc';
-import { Server as ElectronIPCServer } from 'vs/base/parts/ipc/electron-main/ipc.electron-main';
-import { Client } from 'vs/base/parts/ipc/common/ipc.net';
-import { Server, connect } from 'vs/base/parts/ipc/node/ipc.net';
-import { SharedProcess } from 'vs/code/electron-main/sharedProcess';
-import { LaunchMainService, ILaunchMainService } from 'vs/platform/launch/electron-main/launchMainService';
-import { IInstantiationService, ServicesAccessor } from 'vs/platform/instantiation/common/instantiation';
-import { ServiceCollection } from 'vs/platform/instantiation/common/serviceCollection';
-import { SyncDescriptor } from 'vs/platform/instantiation/common/descriptors';
-import { ILogService } from 'vs/platform/log/common/log';
-import { IStateService } from 'vs/platform/state/node/state';
-import { IEnvironmentService } from 'vs/platform/environment/common/environment';
-import { IConfigurationService } from 'vs/platform/configuration/common/configuration';
-import { IURLService, IOpenURLOptions } from 'vs/platform/url/common/url';
-import { URLHandlerChannelClient, URLHandlerRouter } from 'vs/platform/url/common/urlIpc';
-import { ITelemetryService } from 'vs/platform/telemetry/common/telemetry';
-import { NullTelemetryService, combinedAppender, LogAppender } from 'vs/platform/telemetry/common/telemetryUtils';
-import { TelemetryAppenderClient } from 'vs/platform/telemetry/node/telemetryIpc';
-import { TelemetryService, ITelemetryServiceConfig } from 'vs/platform/telemetry/common/telemetryService';
-import { resolveCommonProperties } from 'vs/platform/telemetry/node/commonProperties';
-import { getDelayedChannel, StaticRouter } from 'vs/base/parts/ipc/common/ipc';
-import { createChannelReceiver } from 'vs/base/parts/ipc/node/ipc';
+import {app, ipcMain as ipc, systemPreferences, shell, Event, contentTracing, protocol, powerMonitor, IpcMainEvent, BrowserWindow} from 'electron';
+import {IProcessEnvironment, isWindows, isMacintosh} from 'vs/base/common/platform';
+import {WindowsMainService} from 'vs/platform/windows/electron-main/windowsMainService';
+import {OpenContext, IWindowOpenable, IWindowConfiguration} from 'vs/platform/windows/common/windows';
+import {ActiveWindowManager} from 'vs/code/node/activeWindowTracker';
+import {ILifecycleMainService, LifecycleMainPhase} from 'vs/platform/lifecycle/electron-main/lifecycleMainService';
+import {getShellEnvironment} from 'vs/code/node/shellEnv';
+import {IUpdateService} from 'vs/platform/update/common/update';
+import {UpdateChannel} from 'vs/platform/update/electron-main/updateIpc';
+import {Server as ElectronIPCServer} from 'vs/base/parts/ipc/electron-main/ipc.electron-main';
+import {Client} from 'vs/base/parts/ipc/common/ipc.net';
+import {Server, connect} from 'vs/base/parts/ipc/node/ipc.net';
+import {SharedProcess} from 'vs/code/electron-main/sharedProcess';
+import {LaunchMainService, ILaunchMainService} from 'vs/platform/launch/electron-main/launchMainService';
+import {IInstantiationService, ServicesAccessor} from 'vs/platform/instantiation/common/instantiation';
+import {ServiceCollection} from 'vs/platform/instantiation/common/serviceCollection';
+import {SyncDescriptor} from 'vs/platform/instantiation/common/descriptors';
+import {ILogService} from 'vs/platform/log/common/log';
+import {IStateService} from 'vs/platform/state/node/state';
+import {IEnvironmentService} from 'vs/platform/environment/common/environment';
+import {IConfigurationService} from 'vs/platform/configuration/common/configuration';
+import {IURLService, IOpenURLOptions} from 'vs/platform/url/common/url';
+import {URLHandlerChannelClient, URLHandlerRouter} from 'vs/platform/url/common/urlIpc';
+import {ITelemetryService} from 'vs/platform/telemetry/common/telemetry';
+import {NullTelemetryService, combinedAppender, LogAppender} from 'vs/platform/telemetry/common/telemetryUtils';
+import {TelemetryAppenderClient} from 'vs/platform/telemetry/node/telemetryIpc';
+import {TelemetryService, ITelemetryServiceConfig} from 'vs/platform/telemetry/common/telemetryService';
+import {resolveCommonProperties} from 'vs/platform/telemetry/node/commonProperties';
+import {getDelayedChannel, StaticRouter} from 'vs/base/parts/ipc/common/ipc';
+import {createChannelReceiver} from 'vs/base/parts/ipc/node/ipc';
 import product from 'vs/platform/product/common/product';
-import { ProxyAuthHandler } from 'vs/code/electron-main/auth';
-import { Disposable } from 'vs/base/common/lifecycle';
-import { IWindowsMainService, ICodeWindow } from 'vs/platform/windows/electron-main/windows';
-import { URI } from 'vs/base/common/uri';
-import { hasWorkspaceFileExtension, IWorkspacesService } from 'vs/platform/workspaces/common/workspaces';
-import { WorkspacesService } from 'vs/platform/workspaces/electron-main/workspacesService';
-import { getMachineId } from 'vs/base/node/id';
-import { Win32UpdateService } from 'vs/platform/update/electron-main/updateService.win32';
-import { LinuxUpdateService } from 'vs/platform/update/electron-main/updateService.linux';
-import { DarwinUpdateService } from 'vs/platform/update/electron-main/updateService.darwin';
-import { IIssueService } from 'vs/platform/issue/node/issue';
-import { IssueMainService } from 'vs/platform/issue/electron-main/issueMainService';
-import { LoggerChannel } from 'vs/platform/log/common/logIpc';
-import { setUnexpectedErrorHandler, onUnexpectedError } from 'vs/base/common/errors';
-import { ElectronURLListener } from 'vs/platform/url/electron-main/electronUrlListener';
-import { serve as serveDriver } from 'vs/platform/driver/electron-main/driver';
-import { IMenubarService } from 'vs/platform/menubar/node/menubar';
-import { MenubarMainService } from 'vs/platform/menubar/electron-main/menubarMainService';
-import { RunOnceScheduler } from 'vs/base/common/async';
-import { registerContextMenuListener } from 'vs/base/parts/contextmenu/electron-main/contextmenu';
-import { homedir } from 'os';
-import { join, sep } from 'vs/base/common/path';
-import { localize } from 'vs/nls';
-import { Schemas } from 'vs/base/common/network';
-import { SnapUpdateService } from 'vs/platform/update/electron-main/updateService.snap';
-import { IStorageMainService, StorageMainService } from 'vs/platform/storage/node/storageMainService';
-import { GlobalStorageDatabaseChannel } from 'vs/platform/storage/node/storageIpc';
-import { startsWith } from 'vs/base/common/strings';
-import { BackupMainService } from 'vs/platform/backup/electron-main/backupMainService';
-import { IBackupMainService } from 'vs/platform/backup/electron-main/backup';
-import { WorkspacesHistoryMainService, IWorkspacesHistoryMainService } from 'vs/platform/workspaces/electron-main/workspacesHistoryMainService';
-import { URLService } from 'vs/platform/url/node/urlService';
-import { WorkspacesMainService, IWorkspacesMainService } from 'vs/platform/workspaces/electron-main/workspacesMainService';
-import { statSync } from 'fs';
-import { DiagnosticsService } from 'vs/platform/diagnostics/node/diagnosticsIpc';
-import { IDiagnosticsService } from 'vs/platform/diagnostics/node/diagnosticsService';
-import { FileService } from 'vs/platform/files/common/fileService';
-import { IFileService } from 'vs/platform/files/common/files';
-import { DiskFileSystemProvider } from 'vs/platform/files/node/diskFileSystemProvider';
-import { ExtensionHostDebugBroadcastChannel } from 'vs/platform/debug/common/extensionHostDebugIpc';
-import { IElectronMainService, ElectronMainService } from 'vs/platform/electron/electron-main/electronMainService';
-import { ISharedProcessMainService, SharedProcessMainService } from 'vs/platform/ipc/electron-main/sharedProcessMainService';
-import { assign } from 'vs/base/common/objects';
-import { IDialogMainService, DialogMainService } from 'vs/platform/dialogs/electron-main/dialogs';
-import { withNullAsUndefined } from 'vs/base/common/types';
-import { parseArgs, OPTIONS } from 'vs/platform/environment/node/argv';
+import {ProxyAuthHandler} from 'vs/code/electron-main/auth';
+import {Disposable} from 'vs/base/common/lifecycle';
+import {IWindowsMainService, ICodeWindow} from 'vs/platform/windows/electron-main/windows';
+import {URI} from 'vs/base/common/uri';
+import {hasWorkspaceFileExtension, IWorkspacesService} from 'vs/platform/workspaces/common/workspaces';
+import {WorkspacesService} from 'vs/platform/workspaces/electron-main/workspacesService';
+import {getMachineId} from 'vs/base/node/id';
+import {Win32UpdateService} from 'vs/platform/update/electron-main/updateService.win32';
+import {LinuxUpdateService} from 'vs/platform/update/electron-main/updateService.linux';
+import {DarwinUpdateService} from 'vs/platform/update/electron-main/updateService.darwin';
+import {IIssueService} from 'vs/platform/issue/node/issue';
+import {IssueMainService} from 'vs/platform/issue/electron-main/issueMainService';
+import {LoggerChannel} from 'vs/platform/log/common/logIpc';
+import {setUnexpectedErrorHandler, onUnexpectedError} from 'vs/base/common/errors';
+import {ElectronURLListener} from 'vs/platform/url/electron-main/electronUrlListener';
+import {serve as serveDriver} from 'vs/platform/driver/electron-main/driver';
+import {IMenubarService} from 'vs/platform/menubar/node/menubar';
+import {MenubarMainService} from 'vs/platform/menubar/electron-main/menubarMainService';
+import {RunOnceScheduler} from 'vs/base/common/async';
+import {registerContextMenuListener} from 'vs/base/parts/contextmenu/electron-main/contextmenu';
+import {homedir} from 'os';
+import {join, sep} from 'vs/base/common/path';
+import {localize} from 'vs/nls';
+import {Schemas} from 'vs/base/common/network';
+import {SnapUpdateService} from 'vs/platform/update/electron-main/updateService.snap';
+import {IStorageMainService, StorageMainService} from 'vs/platform/storage/node/storageMainService';
+import {GlobalStorageDatabaseChannel} from 'vs/platform/storage/node/storageIpc';
+import {startsWith} from 'vs/base/common/strings';
+import {BackupMainService} from 'vs/platform/backup/electron-main/backupMainService';
+import {IBackupMainService} from 'vs/platform/backup/electron-main/backup';
+import {WorkspacesHistoryMainService, IWorkspacesHistoryMainService} from 'vs/platform/workspaces/electron-main/workspacesHistoryMainService';
+import {URLService} from 'vs/platform/url/node/urlService';
+import {WorkspacesMainService, IWorkspacesMainService} from 'vs/platform/workspaces/electron-main/workspacesMainService';
+import {statSync} from 'fs';
+import {DiagnosticsService} from 'vs/platform/diagnostics/node/diagnosticsIpc';
+import {IDiagnosticsService} from 'vs/platform/diagnostics/node/diagnosticsService';
+import {FileService} from 'vs/platform/files/common/fileService';
+import {IFileService} from 'vs/platform/files/common/files';
+import {DiskFileSystemProvider} from 'vs/platform/files/node/diskFileSystemProvider';
+import {ExtensionHostDebugBroadcastChannel} from 'vs/platform/debug/common/extensionHostDebugIpc';
+import {IElectronMainService, ElectronMainService} from 'vs/platform/electron/electron-main/electronMainService';
+import {ISharedProcessMainService, SharedProcessMainService} from 'vs/platform/ipc/electron-main/sharedProcessMainService';
+import {assign, mixin} from 'vs/base/common/objects';
+import {IDialogMainService, DialogMainService} from 'vs/platform/dialogs/electron-main/dialogs';
+import {withNullAsUndefined} from 'vs/base/common/types';
+import {parseArgs, OPTIONS} from 'vs/platform/environment/node/argv';
+import * as perf from 'vs/base/common/performance';
 
 export class CodeApplication extends Disposable {
 
@@ -137,85 +138,85 @@ export class CodeApplication extends Disposable {
 		// !!! DO NOT CHANGE without consulting the documentation !!!
 		//
 		// app.on('remote-get-guest-web-contents', event => event.preventDefault()); // TODO@Ben TODO@Matt revisit this need for <webview>
-		app.on('remote-require', (event, sender, module) => {
-			this.logService.trace('App#on(remote-require): prevented');
+		// app.on('remote-require', (event, sender, module) => {
+		// 	this.logService.trace('App#on(remote-require): prevented');
 
-			event.preventDefault();
-		});
-		app.on('remote-get-global', (event, sender, module) => {
-			this.logService.trace(`App#on(remote-get-global): prevented on ${module}`);
+		// 	event.preventDefault();
+		// });
+		// app.on('remote-get-global', (event, sender, module) => {
+		// 	this.logService.trace(`App#on(remote-get-global): prevented on ${module}`);
 
-			event.preventDefault();
-		});
-		app.on('remote-get-builtin', (event, sender, module) => {
-			this.logService.trace(`App#on(remote-get-builtin): prevented on ${module}`);
+		// 	event.preventDefault();
+		// });
+		// app.on('remote-get-builtin', (event, sender, module) => {
+		// 	this.logService.trace(`App#on(remote-get-builtin): prevented on ${module}`);
 
-			if (module !== 'clipboard') {
-				event.preventDefault();
-			}
-		});
-		app.on('remote-get-current-window', event => {
-			this.logService.trace(`App#on(remote-get-current-window): prevented`);
+		// 	if (module !== 'clipboard') {
+		// 		event.preventDefault();
+		// 	}
+		// });
+		// app.on('remote-get-current-window', event => {
+		// 	this.logService.trace(`App#on(remote-get-current-window): prevented`);
 
-			event.preventDefault();
-		});
-		app.on('remote-get-current-web-contents', event => {
-			if (this.environmentService.args.driver) {
-				return; // the driver needs access to web contents
-			}
+		// 	event.preventDefault();
+		// });
+		// app.on('remote-get-current-web-contents', event => {
+		// 	if (this.environmentService.args.driver) {
+		// 		return; // the driver needs access to web contents
+		// 	}
 
-			this.logService.trace(`App#on(remote-get-current-web-contents): prevented`);
+		// 	this.logService.trace(`App#on(remote-get-current-web-contents): prevented`);
 
-			event.preventDefault();
-		});
-		app.on('web-contents-created', (_event: Event, contents) => {
-			contents.on('will-attach-webview', (event: Event, webPreferences, params) => {
+		// 	event.preventDefault();
+		// });
+		// app.on('web-contents-created', (_event: Event, contents) => {
+		// 	contents.on('will-attach-webview', (event: Event, webPreferences, params) => {
 
-				const isValidWebviewSource = (source: string | undefined): boolean => {
-					if (!source) {
-						return false;
-					}
+		// 		const isValidWebviewSource = (source: string | undefined): boolean => {
+		// 			if (!source) {
+		// 				return false;
+		// 			}
 
-					if (source === 'data:text/html;charset=utf-8,%3C%21DOCTYPE%20html%3E%0D%0A%3Chtml%20lang%3D%22en%22%20style%3D%22width%3A%20100%25%3B%20height%3A%20100%25%22%3E%0D%0A%3Chead%3E%0D%0A%09%3Ctitle%3EVirtual%20Document%3C%2Ftitle%3E%0D%0A%3C%2Fhead%3E%0D%0A%3Cbody%20style%3D%22margin%3A%200%3B%20overflow%3A%20hidden%3B%20width%3A%20100%25%3B%20height%3A%20100%25%22%3E%0D%0A%3C%2Fbody%3E%0D%0A%3C%2Fhtml%3E') {
-						return true;
-					}
+		// 			if (source === 'data:text/html;charset=utf-8,%3C%21DOCTYPE%20html%3E%0D%0A%3Chtml%20lang%3D%22en%22%20style%3D%22width%3A%20100%25%3B%20height%3A%20100%25%22%3E%0D%0A%3Chead%3E%0D%0A%09%3Ctitle%3EVirtual%20Document%3C%2Ftitle%3E%0D%0A%3C%2Fhead%3E%0D%0A%3Cbody%20style%3D%22margin%3A%200%3B%20overflow%3A%20hidden%3B%20width%3A%20100%25%3B%20height%3A%20100%25%22%3E%0D%0A%3C%2Fbody%3E%0D%0A%3C%2Fhtml%3E') {
+		// 				return true;
+		// 			}
 
-					const srcUri = URI.parse(source).fsPath.toLowerCase();
-					const rootUri = URI.file(this.environmentService.appRoot).fsPath.toLowerCase();
+		// 			const srcUri = URI.parse(source).fsPath.toLowerCase();
+		// 			const rootUri = URI.file(this.environmentService.appRoot).fsPath.toLowerCase();
 
-					return startsWith(srcUri, rootUri + sep);
-				};
+		// 			return startsWith(srcUri, rootUri + sep);
+		// 		};
 
-				// Ensure defaults
-				delete webPreferences.preload;
-				webPreferences.nodeIntegration = false;
+		// 		// Ensure defaults
+		// 		delete webPreferences.preload;
+		// 		webPreferences.nodeIntegration = false;
 
-				// Verify URLs being loaded
-				// https://github.com/electron/electron/issues/21553
-				if (isValidWebviewSource(params.src) && isValidWebviewSource((webPreferences as { preloadURL: string }).preloadURL)) {
-					return;
-				}
+		// 		// Verify URLs being loaded
+		// 		// https://github.com/electron/electron/issues/21553
+		// 		if (isValidWebviewSource(params.src) && isValidWebviewSource((webPreferences as { preloadURL: string }).preloadURL)) {
+		// 			return;
+		// 		}
 
-				delete (webPreferences as { preloadURL: string }).preloadURL; // https://github.com/electron/electron/issues/21553
+		// 		delete (webPreferences as { preloadURL: string }).preloadURL; // https://github.com/electron/electron/issues/21553
 
-				// Otherwise prevent loading
-				this.logService.error('webContents#web-contents-created: Prevented webview attach');
+		// 		// Otherwise prevent loading
+		// 		this.logService.error('webContents#web-contents-created: Prevented webview attach');
 
-				event.preventDefault();
-			});
+		// 		event.preventDefault();
+		// 	});
 
-			contents.on('will-navigate', event => {
-				this.logService.error('webContents#will-navigate: Prevented webcontent navigation');
+		// 	contents.on('will-navigate', event => {
+		// 		this.logService.error('webContents#will-navigate: Prevented webcontent navigation');
 
-				event.preventDefault();
-			});
+		// 		event.preventDefault();
+		// 	});
 
-			contents.on('new-window', (event: Event, url: string) => {
-				event.preventDefault(); // prevent code that wants to open links
+		// 	contents.on('new-window', (event: Event, url: string) => {
+		// 		event.preventDefault(); // prevent code that wants to open links
 
-				shell.openExternal(url);
-			});
-		});
+		// 		shell.openExternal(url);
+		// 	});
+		// });
 
 		let macOpenFileURIs: IWindowOpenable[] = [];
 		let runningTimeout: NodeJS.Timeout | null = null;
@@ -359,7 +360,7 @@ export class CodeApplication extends Disposable {
 
 		// Resolve unique machine ID
 		this.logService.trace('Resolving machine identifier...');
-		const { machineId, trueMachineId } = await this.resolveMachineId();
+		const {machineId, trueMachineId} = await this.resolveMachineId();
 		this.logService.trace(`Resolved machine identifier: ${machineId} (trueMachineId: ${trueMachineId})`);
 
 		// Spawn shared process after the first window has opened and 3s have passed
@@ -399,7 +400,7 @@ export class CodeApplication extends Disposable {
 		}
 	}
 
-	private async resolveMachineId(): Promise<{ machineId: string, trueMachineId?: string }> {
+	private async resolveMachineId(): Promise<{machineId: string, trueMachineId?: string}> {
 
 		// We cache the machineId for faster lookups on startup
 		// and resolve it only once initially if not cached
@@ -421,7 +422,7 @@ export class CodeApplication extends Disposable {
 			}
 		}
 
-		return { machineId, trueMachineId };
+		return {machineId, trueMachineId};
 	}
 
 	private async createServices(machineId: string, trueMachineId: string | undefined, sharedProcess: SharedProcess, sharedProcessClient: Promise<Client<string>>): Promise<IInstantiationService> {
@@ -481,7 +482,7 @@ export class CodeApplication extends Disposable {
 			const appender = combinedAppender(new TelemetryAppenderClient(channel), new LogAppender(this.logService));
 			const commonProperties = resolveCommonProperties(product.commit, product.version, machineId, product.msftInternalDomains, this.environmentService.installSourcePath);
 			const piiPaths = this.environmentService.extensionsPath ? [this.environmentService.appRoot, this.environmentService.extensionsPath] : [this.environmentService.appRoot];
-			const config: ITelemetryServiceConfig = { appender, commonProperties, piiPaths, trueMachineId };
+			const config: ITelemetryServiceConfig = {appender, commonProperties, piiPaths, trueMachineId};
 
 			services.set(ITelemetryService, new SyncDescriptor(TelemetryService, [config]));
 		} else {
@@ -531,11 +532,11 @@ export class CodeApplication extends Disposable {
 		});
 	}
 
-	private openFirstWindow(accessor: ServicesAccessor, electronIpcServer: ElectronIPCServer, sharedProcessClient: Promise<Client<string>>): ICodeWindow[] {
+	private openFirstWindow(accessor: ServicesAccessor, electronIpcServer: ElectronIPCServer, sharedProcessClient: Promise<Client<string>>): ICodeWindow[] | any {
 
 		// Register more Main IPC services
 		const launchMainService = accessor.get(ILaunchMainService);
-		const launchChannel = createChannelReceiver(launchMainService, { disableMarshalling: true });
+		const launchChannel = createChannelReceiver(launchMainService, {disableMarshalling: true});
 		this.mainIpcServer.registerChannel('launch', launchChannel);
 
 		// Register more Electron IPC services
@@ -595,9 +596,9 @@ export class CodeApplication extends Disposable {
 				// Catch file URLs
 				if (uri.authority === Schemas.file && !!uri.path) {
 					const cli = assign(Object.create(null), environmentService.args);
-					const urisToOpen = [{ fileUri: URI.file(uri.fsPath) }];
+					const urisToOpen = [{fileUri: URI.file(uri.fsPath)}];
 
-					windowsMainService.open({ context: OpenContext.API, cli, urisToOpen, gotoLineMode: true });
+					windowsMainService.open({context: OpenContext.API, cli, urisToOpen, gotoLineMode: true});
 
 					return true;
 				}
@@ -619,8 +620,8 @@ export class CodeApplication extends Disposable {
 			urlService.registerHandler({
 				async handleURL(uri: URI, options?: IOpenURLOptions): Promise<boolean> {
 					if (windowsMainService.getWindowCount() === 0) {
-						const cli = { ...environmentService.args };
-						const [window] = windowsMainService.open({ context: OpenContext.API, cli, forceEmpty: true, gotoLineMode: true });
+						const cli = {...environmentService.args};
+						const [window] = windowsMainService.open({context: OpenContext.API, cli, forceEmpty: true, gotoLineMode: true});
 
 						await window.ready();
 
@@ -677,33 +678,121 @@ export class CodeApplication extends Disposable {
 		}
 
 		// default: read paths from cli
-		return windowsMainService.open({
+		// 开发者工具中首次进入不打开窗口
+		if (process.env.VSCODE) {
+			return windowsMainService.open({
+				context,
+				cli: args,
+				forceNewWindow: args['new-window'] || (!hasCliArgs && args['unity-launch']),
+				diffMode: args.diff,
+				noRecentEntry,
+				waitMarkerFileURI,
+				gotoLineMode: args.goto,
+				initialStartup: true
+			});
+		}
+
+		// 编辑器专用事件处理
+		if (!process.env.VSCODE) {
+			(async () => {
+				const config = await this.getPageConfig(context);
+				ipc.handle('vscode-editor:getPageConfig', async (event, path) => {
+					config.folderUri = URI.file(path);
+					config.folderUri.fsPath;
+					config.folderUri.toString();
+					const result = encodeURIComponent(JSON.stringify(config));
+					return result;
+				});
+			})();
+		}
+	}
+
+	private async getPageConfig(context: any): Promise<IWindowConfiguration> {
+		const args = this.environmentService.args;
+		const noRecentEntry = args['skip-add-to-recently-opened'] === true;
+		const waitMarkerFileURI = args.wait && args.waitMarkerFilePath ? URI.file(args.waitMarkerFilePath) : undefined;
+		const openConfig = {
 			context,
 			cli: args,
-			forceNewWindow: args['new-window'] || (!hasCliArgs && args['unity-launch']),
+			forceNewWindow: false,
 			diffMode: args.diff,
 			noRecentEntry,
 			waitMarkerFileURI,
 			gotoLineMode: args.goto,
-			initialStartup: true
-		});
+			initialStartup: true,
+			userEnv: undefined,
+			forceNewTabbedWindow: undefined
+		};
+		const folderOrWorkspace = {
+			workspace: undefined,
+			folderUri: '',
+			remoteAuthority: undefined,
+		};
+		const forceNewWindow = false;
+		const windowToUse = undefined;
+		const options = {
+			userEnv: openConfig.userEnv,
+			cli: openConfig.cli,
+			initialStartup: openConfig.initialStartup,
+			workspace: folderOrWorkspace.workspace,
+			folderUri: folderOrWorkspace.folderUri,
+			fileInputs: undefined,
+			remoteAuthority: folderOrWorkspace.remoteAuthority,
+			forceNewWindow,
+			forceNewTabbedWindow: openConfig.forceNewTabbedWindow,
+			windowToUse
+		};
+		const {machineId} = await this.resolveMachineId();
+		const configuration: IWindowConfiguration = mixin({}, options.cli);
+		configuration.appRoot = this.environmentService.appRoot;
+		configuration.machineId = machineId;
+		configuration.nodeCachedDataDir = this.environmentService.nodeCachedDataDir;
+		configuration.mainPid = process.pid;
+		configuration.execPath = process.execPath;
+		configuration.userEnv = assign({}, this.userEnv, options.userEnv || {});
+		configuration.isInitialStartup = options.initialStartup;
+		configuration.workspace = options.workspace;
+		configuration.remoteAuthority = options.remoteAuthority;
+
+		configuration.windowId = 3;
+		configuration.sessionId = `window:${3}`;
+		configuration.logLevel = this.logService.getLevel();
+
+		// Dump Perf Counters
+		configuration.perfEntries = perf.exportEntries();
+		// Parts splash
+		configuration.partsSplashPath = join(this.environmentService.userDataPath, 'rapid_render.json');
+
+
+		// Config (combination of process.argv and window configuration)
+		const environment = parseArgs(process.argv, OPTIONS);
+		const config = assign(environment, configuration);
+		for (const key in config) {
+			const configValue = (config as any)[key];
+			if (configValue === undefined || configValue === null || configValue === '' || configValue === false) {
+				delete (config as any)[key]; // only send over properties that have a true value
+			}
+		}
+
+		config.folderUri = URI.file('');
+		return config;
 	}
 
 	private getWindowOpenableFromPathSync(path: string): IWindowOpenable {
 		try {
 			const fileStat = statSync(path);
 			if (fileStat.isDirectory()) {
-				return { folderUri: URI.file(path) };
+				return {folderUri: URI.file(path)};
 			}
 
 			if (hasWorkspaceFileExtension(path)) {
-				return { workspaceUri: URI.file(path) };
+				return {workspaceUri: URI.file(path)};
 			}
 		} catch (error) {
 			// ignore errors
 		}
 
-		return { fileUri: URI.file(path) };
+		return {fileUri: URI.file(path)};
 	}
 
 	private afterWindowOpen(): void {

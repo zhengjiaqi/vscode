@@ -44,9 +44,12 @@ if (portable.isPortable) {
 setCurrentWorkingDirectory();
 
 // Register custom schemes with privileges
-protocol.registerSchemesAsPrivileged([
-	{ scheme: 'vscode-resource', privileges: { secure: true, supportFetchAPI: true, corsEnabled: true } }
-]);
+if (process.env.VSCODE) {
+	// 工具中暂不定义schemes调起
+	protocol.registerSchemesAsPrivileged([
+		{ scheme: 'vscode-resource', privileges: { secure: true, supportFetchAPI: true, corsEnabled: true } }
+	]);
+}
 
 // Global app listeners
 registerListeners();
@@ -72,7 +75,15 @@ if (locale) {
 }
 
 // Load our code once ready
-app.once('ready', function () {
+if (process.env.VSCODE) {
+	app.once('ready', function () {
+		handleReady();
+	});
+} else {
+	handleReady();
+}
+
+function handleReady() {
 	if (args['trace']) {
 		// @ts-ignore
 		const contentTracing = require('electron').contentTracing;
@@ -86,7 +97,7 @@ app.once('ready', function () {
 	} else {
 		onReady();
 	}
-});
+}
 
 /**
  * Main startup routine

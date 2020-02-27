@@ -3,34 +3,34 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IAction, IActionRunner, ActionRunner, WorkbenchActionExecutedEvent, WorkbenchActionExecutedClassification } from 'vs/base/common/actions';
-import { Separator } from 'vs/base/browser/ui/actionbar/actionbar';
+import {IAction, IActionRunner, ActionRunner, WorkbenchActionExecutedEvent, WorkbenchActionExecutedClassification} from 'vs/base/common/actions';
+import {Separator} from 'vs/base/browser/ui/actionbar/actionbar';
 import * as dom from 'vs/base/browser/dom';
-import { IContextMenuService, IContextViewService } from 'vs/platform/contextview/browser/contextView';
-import { ITelemetryService } from 'vs/platform/telemetry/common/telemetry';
-import { IKeybindingService } from 'vs/platform/keybinding/common/keybinding';
-import { webFrame } from 'electron';
-import { unmnemonicLabel } from 'vs/base/common/labels';
-import { Event, Emitter } from 'vs/base/common/event';
-import { INotificationService } from 'vs/platform/notification/common/notification';
-import { IContextMenuDelegate, ContextSubMenu, IContextMenuEvent } from 'vs/base/browser/contextmenu';
-import { once } from 'vs/base/common/functional';
-import { Disposable } from 'vs/base/common/lifecycle';
-import { IContextMenuItem } from 'vs/base/parts/contextmenu/common/contextmenu';
-import { popup } from 'vs/base/parts/contextmenu/electron-browser/contextmenu';
-import { getTitleBarStyle } from 'vs/platform/windows/common/windows';
-import { isMacintosh } from 'vs/base/common/platform';
-import { IConfigurationService } from 'vs/platform/configuration/common/configuration';
-import { IEnvironmentService } from 'vs/platform/environment/common/environment';
-import { ContextMenuService as HTMLContextMenuService } from 'vs/platform/contextview/browser/contextMenuService';
-import { IThemeService } from 'vs/platform/theme/common/themeService';
-import { registerSingleton } from 'vs/platform/instantiation/common/extensions';
+import {IContextMenuService, IContextViewService} from 'vs/platform/contextview/browser/contextView';
+import {ITelemetryService} from 'vs/platform/telemetry/common/telemetry';
+import {IKeybindingService} from 'vs/platform/keybinding/common/keybinding';
+import {webFrame} from 'electron';
+import {unmnemonicLabel} from 'vs/base/common/labels';
+import {Event, Emitter} from 'vs/base/common/event';
+import {INotificationService} from 'vs/platform/notification/common/notification';
+import {IContextMenuDelegate, ContextSubMenu, IContextMenuEvent} from 'vs/base/browser/contextmenu';
+import {once} from 'vs/base/common/functional';
+import {Disposable} from 'vs/base/common/lifecycle';
+import {IContextMenuItem} from 'vs/base/parts/contextmenu/common/contextmenu';
+import {popup} from 'vs/base/parts/contextmenu/electron-browser/contextmenu';
+import {getTitleBarStyle} from 'vs/platform/windows/common/windows';
+import {isMacintosh} from 'vs/base/common/platform';
+import {IConfigurationService} from 'vs/platform/configuration/common/configuration';
+import {IEnvironmentService} from 'vs/platform/environment/common/environment';
+import {ContextMenuService as HTMLContextMenuService} from 'vs/platform/contextview/browser/contextMenuService';
+import {IThemeService} from 'vs/platform/theme/common/themeService';
+import {registerSingleton} from 'vs/platform/instantiation/common/extensions';
 
 export class ContextMenuService extends Disposable implements IContextMenuService {
 
 	_serviceBrand: undefined;
 
-	get onDidContextMenu(): Event<void> { return this.impl.onDidContextMenu; }
+	get onDidContextMenu(): Event<void> {return this.impl.onDidContextMenu;}
 
 	private impl: IContextMenuService;
 
@@ -92,6 +92,7 @@ class NativeContextMenuService extends Disposable implements IContextMenuService
 			let x: number, y: number;
 
 			let zoom = webFrame.getZoomFactor();
+			console.log('###anchor:', anchor);
 			if (dom.isHTMLElement(anchor)) {
 				let elementPosition = dom.getDomNodePagePosition(anchor);
 
@@ -105,7 +106,7 @@ class NativeContextMenuService extends Disposable implements IContextMenuService
 					y += 4 / zoom;
 				}
 			} else {
-				const pos: { x: number; y: number; } = anchor;
+				const pos: {x: number; y: number;} = anchor;
 				x = pos.x + 1; /* prevent first item from being selected automatically under mouse */
 				y = pos.y;
 			}
@@ -113,12 +114,21 @@ class NativeContextMenuService extends Disposable implements IContextMenuService
 			x *= zoom;
 			y *= zoom;
 
-			popup(menu, {
-				x: Math.floor(x),
-				y: Math.floor(y),
-				positioningItem: delegate.autoSelectFirstItem ? 0 : undefined,
-				onHide: () => onHide()
-			});
+			// 修复编辑器中菜单偏移问题
+			if (process.env.VSCODE) {
+				popup(menu, {
+					x: Math.floor(x),
+					y: Math.floor(y),
+					positioningItem: delegate.autoSelectFirstItem ? 0 : undefined,
+					onHide: () => onHide()
+				});
+			} else {
+				popup(menu, {
+					positioningItem: delegate.autoSelectFirstItem ? 0 : undefined,
+					onHide: () => onHide()
+				});
+			}
+
 		}
 	}
 
@@ -132,7 +142,7 @@ class NativeContextMenuService extends Disposable implements IContextMenuService
 
 		// Separator
 		if (entry instanceof Separator) {
-			return { type: 'separator' };
+			return {type: 'separator'};
 		}
 
 		// Submenu
@@ -189,7 +199,7 @@ class NativeContextMenuService extends Disposable implements IContextMenuService
 	}
 
 	private async runAction(actionRunner: IActionRunner, actionToRun: IAction, delegate: IContextMenuDelegate, event: IContextMenuEvent): Promise<void> {
-		this.telemetryService.publicLog2<WorkbenchActionExecutedEvent, WorkbenchActionExecutedClassification>('workbenchActionExecuted', { id: actionToRun.id, from: 'contextMenu' });
+		this.telemetryService.publicLog2<WorkbenchActionExecutedEvent, WorkbenchActionExecutedClassification>('workbenchActionExecuted', {id: actionToRun.id, from: 'contextMenu'});
 
 		const context = delegate.getActionsContext ? delegate.getActionsContext(event) : event;
 

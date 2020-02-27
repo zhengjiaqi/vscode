@@ -24,6 +24,7 @@ bootstrapWindow.load([
 	'vs/css!vs/workbench/workbench.desktop.main'
 ],
 	function (workbench, configuration) {
+		console.log('###configuration-render:', configuration);
 		perf.mark('didLoadWorkbenchMain');
 
 		return process['lazyEnv'].then(function () {

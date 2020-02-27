@@ -43,7 +43,7 @@
         "@typescript-eslint/semi": "warn",
         "@typescript-eslint/class-name-casing": "warn",
         "code-no-unused-expressions": [
-            "warn",
+            "off",
             {
                 "allowTernary": true
             }

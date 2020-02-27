@@ -268,10 +268,10 @@ function hygiene(some) {
 			let original = result.src.replace(/\r\n/gm, '\n');
 			let formatted = result.dest.replace(/\r\n/gm, '\n');
 
-			if (original !== formatted) {
-				console.error('File not formatted. Run the \'Format Document\' command to fix it:', file.relative);
-				errorCount++;
-			}
+			// if (original !== formatted) {
+			// 	console.error('File not formatted. Run the \'Format Document\' command to fix it:', file.relative);
+			// 	errorCount++;
+			// }
 			cb(null, file);
 
 		}, err => {
