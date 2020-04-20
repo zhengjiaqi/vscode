@@ -555,6 +555,7 @@ export class InputBox extends Widget {
 	}
 
 	protected applyStyles(): void {
+		console.log('###this.inputBackground :', this.inputBackground )
 		const background = this.inputBackground ? this.inputBackground.toString() : '';
 		const foreground = this.inputForeground ? this.inputForeground.toString() : '';
 		const border = this.inputBorder ? this.inputBorder.toString() : '';

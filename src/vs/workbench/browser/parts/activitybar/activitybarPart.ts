@@ -59,8 +59,10 @@ export class ActivitybarPart extends Part implements IActivityBarService {
 
 	//#region IView
 
-	readonly minimumWidth: number = 48;
-	readonly maximumWidth: number = 48;
+	// readonly minimumWidth: number = 48;
+	// readonly maximumWidth: number = 48;
+	readonly minimumWidth: number = 0;
+	readonly maximumWidth: number = 0;
 	readonly minimumHeight: number = 0;
 	readonly maximumHeight: number = Number.POSITIVE_INFINITY;
 
@@ -311,27 +313,29 @@ export class ActivitybarPart extends Part implements IActivityBarService {
 		this.content.appendChild(globalActivities);
 
 		this.createGlobalActivityActionBar(globalActivities);
-
+		console.log('###content:', this.content)
 		return this.content;
 	}
 
 	updateStyles(): void {
 		super.updateStyles();
-
+		console.log('###this.content:', this.content)
+		const content = assertIsDefined(this.content);
+		content.style.backgroundColor = this.getColor(ACTIVITY_BAR_BACKGROUND) || '';
 		// Part container
-		const container = assertIsDefined(this.getContainer());
-		const background = this.getColor(ACTIVITY_BAR_BACKGROUND) || '';
-		container.style.backgroundColor = background;
+		// const container = assertIsDefined(this.getContainer());
+		// const background = this.getColor(ACTIVITY_BAR_BACKGROUND) || '';
+		// container.style.backgroundColor = background;
 
-		const borderColor = this.getColor(ACTIVITY_BAR_BORDER) || this.getColor(contrastBorder) || '';
-		const isPositionLeft = this.layoutService.getSideBarPosition() === SideBarPosition.LEFT;
-		container.style.boxSizing = borderColor && isPositionLeft ? 'border-box' : '';
-		container.style.borderRightWidth = borderColor && isPositionLeft ? '1px' : '';
-		container.style.borderRightStyle = borderColor && isPositionLeft ? 'solid' : '';
-		container.style.borderRightColor = isPositionLeft ? borderColor : '';
-		container.style.borderLeftWidth = borderColor && !isPositionLeft ? '1px' : '';
-		container.style.borderLeftStyle = borderColor && !isPositionLeft ? 'solid' : '';
-		container.style.borderLeftColor = !isPositionLeft ? borderColor : '';
+		// const borderColor = this.getColor(ACTIVITY_BAR_BORDER) || this.getColor(contrastBorder) || '';
+		// const isPositionLeft = this.layoutService.getSideBarPosition() === SideBarPosition.LEFT;
+		// container.style.boxSizing = borderColor && isPositionLeft ? 'border-box' : '';
+		// container.style.borderRightWidth = borderColor && isPositionLeft ? '1px' : '';
+		// container.style.borderRightStyle = borderColor && isPositionLeft ? 'solid' : '';
+		// container.style.borderRightColor = isPositionLeft ? borderColor : '';
+		// container.style.borderLeftWidth = borderColor && !isPositionLeft ? '1px' : '';
+		// container.style.borderLeftStyle = borderColor && !isPositionLeft ? 'solid' : '';
+		// container.style.borderLeftColor = !isPositionLeft ? borderColor : '';
 	}
 
 	private getActivitybarItemColors(theme: ITheme): ICompositeBarColors {
@@ -429,6 +433,7 @@ export class ActivitybarPart extends Part implements IActivityBarService {
 	}
 
 	private onDidChangeActiveViews(viewlet: ViewletDescriptor, viewDescriptors: IViewDescriptorCollection): void {
+		console.log('###onDidChangeActiveViews:', viewlet, viewDescriptors)
 		if (viewDescriptors.activeViewDescriptors.length) {
 			this.compositeBar.addComposite(viewlet);
 		} else {
@@ -491,7 +496,8 @@ export class ActivitybarPart extends Part implements IActivityBarService {
 		if (!this.layoutService.isVisible(Parts.ACTIVITYBAR_PART)) {
 			return;
 		}
-
+		// width = 150;
+		console.log('###layout-activitybarPart:', width, height)
 		// Layout contents
 		const contentAreaSize = super.layoutContents(width, height).contentSize;
 
@@ -503,6 +509,9 @@ export class ActivitybarPart extends Part implements IActivityBarService {
 		if (this.menubar) {
 			availableHeight -= this.menubar.clientHeight;
 		}
+		console.log('###this.compositeBar:', this.compositeBar);
+		console.log('###Dimension:', width, availableHeight);
+
 		this.compositeBar.layout(new Dimension(width, availableHeight));
 	}
 

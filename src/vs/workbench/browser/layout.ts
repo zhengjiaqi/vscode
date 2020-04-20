@@ -687,6 +687,7 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 	}
 
 	toggleZenMode(skipLayout?: boolean, restoring = false): void {
+		console.log('###toggleZenMode:', skipLayout, restoring)
 		this.state.zenMode.active = !this.state.zenMode.active;
 		this.state.zenMode.transitionDisposables.clear();
 
@@ -866,9 +867,11 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 
 		this.container.prepend(workbenchGrid.element);
 		this.workbenchGrid = workbenchGrid;
+		console.log('###workbenchGrid:', workbenchGrid);
 
 		[titleBar, editorPart, activityBar, panelPart, sideBar, statusBar].forEach((part: Part) => {
 			this._register(part.onDidVisibilityChange((visible) => {
+				console.log('###onDidVisibilityChange:', part, visible)
 				this._onPartVisibilityChange.fire();
 				if (part === sideBar) {
 					this.setSideBarHidden(!visible, true);
@@ -913,6 +916,8 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 			position(this.container, 0, 0, 0, 0, 'relative');
 			size(this.container, this._dimension.width, this._dimension.height);
 
+			console.log('=====layout:', this._dimension.width, this._dimension.height)
+
 			// Layout the grid widget
 			this.workbenchGrid.layout(this._dimension.width, this._dimension.height);
 
@@ -948,6 +953,7 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 	}
 
 	resizePart(part: Parts, sizeChange: number): void {
+		console.log('###resizePart:', part, sizeChange);
 		const sizeChangePxWidth = this.workbenchGrid.width * sizeChange / 100;
 		const sizeChangePxHeight = this.workbenchGrid.height * sizeChange / 100;
 
@@ -1048,6 +1054,7 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 	}
 
 	setSideBarHidden(hidden: boolean, skipLayout?: boolean): void {
+		console.log('###setSideBarHidden:', hidden);
 		this.state.sideBar.hidden = hidden;
 
 		// Adjust CSS
@@ -1199,6 +1206,7 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 	}
 
 	setPanelPosition(position: Position): void {
+		console.log('###setPanelPosition:', position);
 		if (this.state.panel.hidden) {
 			this.setPanelHidden(false);
 		}

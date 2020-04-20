@@ -324,13 +324,13 @@ export const STATUS_BAR_PROMINENT_ITEM_HOVER_BACKGROUND = registerColor('statusB
 
 export const ACTIVITY_BAR_BACKGROUND = registerColor('activityBar.background', {
 	dark: '#333333',
-	light: '#2C2C2C',
+	light: '#F2F3F5',
 	hc: '#000000'
 }, nls.localize('activityBarBackground', "Activity bar background color. The activity bar is showing on the far left or right and allows to switch between views of the side bar."));
 
 export const ACTIVITY_BAR_FOREGROUND = registerColor('activityBar.foreground', {
 	dark: Color.white,
-	light: Color.white,
+	light: '#333333',
 	hc: Color.white
 }, nls.localize('activityBarForeground', "Activity bar item foreground color when it is active. The activity bar is showing on the far left or right and allows to switch between views of the side bar."));
 
@@ -413,8 +413,9 @@ export const EXTENSION_BADGE_REMOTE_FOREGROUND = registerColor('extensionBadge.r
 // < --- Side Bar --- >
 
 export const SIDE_BAR_BACKGROUND = registerColor('sideBar.background', {
-	dark: '#252526',
-	light: '#F3F3F3',
+	dark: '#242424',
+	// light: Color.white,
+	light: '#f3f3f3',
 	hc: '#000000'
 }, nls.localize('sideBarBackground', "Side bar background color. The side bar is the container for views like explorer and search."));
 

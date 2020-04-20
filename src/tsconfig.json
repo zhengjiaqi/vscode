@@ -21,7 +21,8 @@
 	},
 	"include": [
 		"./typings",
-		"./vs"
+		"./vs",
+		"../extensions/index.d.ts"
 	],
 	"exclude": [
 		"./typings/es6-promise.d.ts"

@@ -73,6 +73,7 @@ export class CenteredViewLayout implements IDisposable {
 	get onDidChange(): Event<IViewSize | undefined> { return this.view.onDidChange; }
 
 	layout(width: number, height: number): void {
+	// debugger
 		this.width = width;
 		this.height = height;
 		if (this.splitView) {

@@ -72,6 +72,10 @@ import { IExtHostTunnelService } from 'vs/workbench/api/common/extHostTunnelServ
 import { IExtHostApiDeprecationService } from 'vs/workbench/api/common/extHostApiDeprecationService';
 import { ExtHostAuthentication } from 'vs/workbench/api/common/extHostAuthentication';
 import { ExtHostTimeline } from 'vs/workbench/api/common/extHostTimeline';
+import { extHostContext } from 'vs/workbench/util/context';
+console.log('###----ExtHostContext:', ExtHostContext)
+console.log('###----ExtHostTimeline:', ExtHostTimeline)
+console.log('###-------extHostContext:', extHostContext)
 
 export interface IExtensionApiFactory {
 	(extension: IExtensionDescription, registry: ExtensionDescriptionRegistry, configProvider: ExtHostConfigProvider): typeof vscode;
@@ -106,6 +110,7 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 	const extHostDecorations = rpcProtocol.set(ExtHostContext.ExtHostDecorations, accessor.get(IExtHostDecorations));
 	const extHostDocumentsAndEditors = rpcProtocol.set(ExtHostContext.ExtHostDocumentsAndEditors, accessor.get(IExtHostDocumentsAndEditors));
 	const extHostCommands = rpcProtocol.set(ExtHostContext.ExtHostCommands, accessor.get(IExtHostCommands));
+	console.log('###extHostCommands:', extHostCommands)
 	const extHostTerminalService = rpcProtocol.set(ExtHostContext.ExtHostTerminalService, accessor.get(IExtHostTerminalService));
 	const extHostDebugService = rpcProtocol.set(ExtHostContext.ExtHostDebugService, accessor.get(IExtHostDebugService));
 	const extHostSearch = rpcProtocol.set(ExtHostContext.ExtHostSearch, accessor.get(IExtHostSearch));
@@ -133,8 +138,9 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 	const extHostLabelService = rpcProtocol.set(ExtHostContext.ExtHostLabelService, new ExtHostLabelService(rpcProtocol));
 	const extHostTheming = rpcProtocol.set(ExtHostContext.ExtHostTheming, new ExtHostTheming(rpcProtocol));
 	const extHostAuthentication = rpcProtocol.set(ExtHostContext.ExtHostAuthentication, new ExtHostAuthentication(rpcProtocol));
+	console.log('###----ExtHostTimeline2:', ExtHostTimeline)
 	const extHostTimeline = rpcProtocol.set(ExtHostContext.ExtHostTimeline, new ExtHostTimeline(rpcProtocol));
-
+	console.log('###----extHostTimeline:', extHostTimeline)
 	// Check that no named customers are missing
 	const expected: ProxyIdentifier<any>[] = values(ExtHostContext);
 	rpcProtocol.assertRegistered(expected);
@@ -193,12 +199,16 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			}
 		};
 
+		console.log('###extHostCommands2:', extHostCommands)
+		console.log('###extHostCommands2.registerCommand:', extHostCommands.registerCommand)
+
 		// namespace: commands
 		const commands: typeof vscode.commands = {
 			registerCommand(id: string, command: <T>(...args: any[]) => T | Thenable<T>, thisArgs?: any): vscode.Disposable {
 				return extHostCommands.registerCommand(true, id, command, thisArgs);
 			},
 			registerTextEditorCommand(id: string, callback: (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, ...args: any[]) => void, thisArg?: any): vscode.Disposable {
+				console.log('###registerTextEditorCommand.registerCommand:', extHostCommands.registerCommand, id, callback, thisArg);
 				return extHostCommands.registerCommand(true, id, (...args: any[]): any => {
 					const activeTextEditor = extHostEditors.getActiveTextEditor();
 					if (!activeTextEditor) {
@@ -868,7 +878,16 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			}
 		};
 
+		// const extHostContext = getExtHostContext();
+		console.log('###extHostContext', extHostContext);
+		console.log('###extHostContext.send', extHostContext.send);
+
+		(<any> process).send({test:1});
+		console.log('###return-vscode')
+
 		return <typeof vscode>{
+			a:11111,
+			extHostContext,
 			version: initData.version,
 			// namespaces
 			authentication,

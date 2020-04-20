@@ -32,6 +32,7 @@ export class SharedProcess implements ISharedProcess {
 
 	@memoize
 	private get _whenReady(): Promise<void> {
+		console.log('----new BrowserWindow2')
 		this.window = new BrowserWindow({
 			show: false,
 			backgroundColor: this.themeMainService.getBackgroundColor(),

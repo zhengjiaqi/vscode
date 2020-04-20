@@ -130,7 +130,9 @@ abstract class ViewItem<TLayoutContext> {
 	}
 
 	layout(offset: number, layoutContext: TLayoutContext | undefined): void {
+		console.log('###layout----:', offset, layoutContext)
 		this.layoutContainer(offset);
+		// debugger
 		this.view.layout(this.size, offset, layoutContext);
 	}
 
@@ -153,6 +155,7 @@ class VerticalViewItem<TLayoutContext> extends ViewItem<TLayoutContext> {
 class HorizontalViewItem<TLayoutContext> extends ViewItem<TLayoutContext> {
 
 	layoutContainer(offset: number): void {
+		console.log('###layoutContainer:', this.container, offset, this.size)
 		this.container.style.left = `${offset}px`;
 		this.container.style.width = `${this.size}px`;
 	}
@@ -294,7 +297,7 @@ export class SplitView<TLayoutContext = undefined> extends Disposable {
 		this.orientation = types.isUndefined(options.orientation) ? Orientation.VERTICAL : options.orientation;
 		this.inverseAltBehavior = !!options.inverseAltBehavior;
 		this.proportionalLayout = types.isUndefined(options.proportionalLayout) ? true : !!options.proportionalLayout;
-
+		console.log('###container---:', container);
 		this.el = document.createElement('div');
 		dom.addClass(this.el, 'monaco-split-view2');
 		dom.addClass(this.el, this.orientation === Orientation.VERTICAL ? 'vertical' : 'horizontal');
@@ -303,11 +306,14 @@ export class SplitView<TLayoutContext = undefined> extends Disposable {
 		this.sashContainer = dom.append(this.el, dom.$('.sash-container'));
 		this.viewContainer = dom.append(this.el, dom.$('.split-view-container'));
 
+		console.log('###this.viewContainer-init:', this.viewContainer)
+
 		this.style(options.styles || defaultStyles);
 
 		// We have an existing set of view, add them now
 		if (options.descriptor) {
 			this.size = options.descriptor.size;
+			console.log('###options.descriptor.views:', options.descriptor.views);
 			options.descriptor.views.forEach((viewDescriptor, index) => {
 				const sizing = types.isUndefined(viewDescriptor.visible) || viewDescriptor.visible ? viewDescriptor.size : { type: 'invisible', cachedVisibleSize: viewDescriptor.size } as InvisibleSizing;
 
@@ -428,6 +434,7 @@ export class SplitView<TLayoutContext = undefined> extends Disposable {
 	}
 
 	layout(size: number, layoutContext?: TLayoutContext): void {
+		console.log('###layout-SplitView:', size, layoutContext, this.el)
 		const previousSize = Math.max(this.size, this.contentSize);
 		this.size = size;
 		this.layoutContext = layoutContext;
@@ -655,9 +662,12 @@ export class SplitView<TLayoutContext = undefined> extends Disposable {
 		}
 
 		this.state = State.Busy;
+		console.log('###doAddView:', view)
 
 		// Add view
 		const container = dom.$('.split-view-view');
+		console.log('###container:', container)
+		console.log('###this.viewContainer:', this.viewContainer)
 
 		if (index === this.viewItems.length) {
 			this.viewContainer.appendChild(container);
@@ -731,7 +741,7 @@ export class SplitView<TLayoutContext = undefined> extends Disposable {
 
 			this.sashItems.splice(index - 1, 0, sashItem);
 		}
-
+		console.log('###view.element:', view.element)
 		container.appendChild(view.element);
 
 		let highPriorityIndexes: number[] | undefined;
@@ -879,13 +889,15 @@ export class SplitView<TLayoutContext = undefined> extends Disposable {
 	}
 
 	private layoutViews(): void {
+		console.log('###layoutViews:')
 		// Save new content size
 		this.contentSize = this.viewItems.reduce((r, i) => r + i.size, 0);
 
 		// Layout views
 		let offset = 0;
-
+		// debugger
 		for (const viewItem of this.viewItems) {
+			// debugger
 			viewItem.layout(offset, this.layoutContext);
 			offset += viewItem.size;
 		}

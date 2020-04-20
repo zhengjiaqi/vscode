@@ -1,0 +1,29 @@
+{
+  "name": "swan-js-intellisense",
+  "displayName": "swan-js-intellisense",
+  "description": "swan-js-intellisense",
+  "version": "1.0.0",
+  "publisher": "zhengjiaqi",
+  "engines": {
+    "vscode": "0.10.x"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/main",
+  "scripts": {
+    "compile": "gulp compile-extension:swan-js-intellisense",
+    "watch": "gulp watch-extension:swan-js-intellisense"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^10.17.20",
+    "vscode": "^1.1.36"
+  },
+  "dependencies": {
+    "vscode-nls": "^4.1.1"
+  }
+}

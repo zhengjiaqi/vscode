@@ -58,9 +58,10 @@ export class TitlebarPart extends Part implements ITitleService {
 
 	readonly minimumWidth: number = 0;
 	readonly maximumWidth: number = Number.POSITIVE_INFINITY;
-	get minimumHeight(): number { return isMacintosh && !isWeb ? 22 / getZoomFactor() : (30 / (this.currentMenubarVisibility === 'hidden' ? getZoomFactor() : 1)); }
-	get maximumHeight(): number { return isMacintosh && !isWeb ? 22 / getZoomFactor() : (30 / (this.currentMenubarVisibility === 'hidden' ? getZoomFactor() : 1)); }
-
+	// get minimumHeight(): number { return isMacintosh && !isWeb ? 22 / getZoomFactor() : (30 / (this.currentMenubarVisibility === 'hidden' ? getZoomFactor() : 1)); }
+	// get maximumHeight(): number { return isMacintosh && !isWeb ? 22 / getZoomFactor() : (30 / (this.currentMenubarVisibility === 'hidden' ? getZoomFactor() : 1)); }
+	get minimumHeight(): number { return 0; }
+	get maximumHeight(): number { return 0; }
 	//#endregion
 
 	private _onMenubarVisibilityChange = this._register(new Emitter<boolean>());

@@ -333,7 +333,7 @@ export class Workbench extends Layout {
 
 		addClasses(this.container, ...workbenchClasses);
 		addClass(document.body, platformClass); // used by our fonts
-
+		console.info('aaaa',this.container);
 		if (isWeb) {
 			addClass(document.body, 'web');
 		}
@@ -347,7 +347,7 @@ export class Workbench extends Layout {
 		// Create Parts
 		[
 			{ id: Parts.TITLEBAR_PART, role: 'contentinfo', classes: ['titlebar'] },
-			{ id: Parts.ACTIVITYBAR_PART, role: 'navigation', classes: ['activitybar', this.state.sideBar.position === Position.LEFT ? 'left' : 'right'] },
+			// { id: Parts.ACTIVITYBAR_PART, role: 'navigation', classes: ['activitybar', this.state.sideBar.position === Position.LEFT ? 'left' : 'right'] },
 			{ id: Parts.SIDEBAR_PART, role: 'complementary', classes: ['sidebar', this.state.sideBar.position === Position.LEFT ? 'left' : 'right'] },
 			{ id: Parts.EDITOR_PART, role: 'main', classes: ['editor'], options: { restorePreviousState: this.state.editor.restoreEditors } },
 			{ id: Parts.PANEL_PART, role: 'complementary', classes: ['panel', positionToString(this.state.panel.position)] },
@@ -355,6 +355,12 @@ export class Workbench extends Layout {
 		].forEach(({ id, role, classes, options }) => {
 			const partContainer = this.createPart(id, role, classes);
 
+			if(id === Parts.SIDEBAR_PART){
+				// const {id, role, classes} = { id: Parts.ACTIVITYBAR_PART, role: 'navigation', classes: ['activitybar', this.state.sideBar.position === Position.LEFT ? 'left' : 'right'] };
+				// const partContainer = this.createPart(id, role, classes);
+				this.getPart(Parts.ACTIVITYBAR_PART).create(partContainer, options);
+			}
+			console.log('###partContainer:', partContainer);
 			this.getPart(id).create(partContainer, options);
 		});
 
@@ -362,6 +368,8 @@ export class Workbench extends Layout {
 		this.createNotificationsHandlers(instantiationService, notificationService);
 
 		// Add Workbench to DOM
+		console.log('------this.parent:', this.parent);
+		console.log('------this.container:', this.container);
 		this.parent.appendChild(this.container);
 	}
 

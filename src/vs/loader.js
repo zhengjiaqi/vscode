@@ -19,6 +19,7 @@
  *---------------------------------------------------------------------------------------------
  *--------------------------------------------------------------------------------------------*/
 var _amdLoaderGlobal = this;
+console.info('loader.js');
 var _commonjsGlobal = typeof global === 'object' ? global : {};
 var AMDLoader;
 (function (AMDLoader) {
@@ -687,6 +688,7 @@ var AMDLoader;
             function makeRequireFunction(mod) {
                 var Module = mod.constructor;
                 var require = function require(path) {
+					console.info(path);
                     try {
                         return mod.require(path);
                     }

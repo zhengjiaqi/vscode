@@ -171,7 +171,7 @@ export class SidebarPart extends CompositePart<Viewlet> implements IViewletServi
 
 		// Part container
 		const container = assertIsDefined(this.getContainer());
-
+		console.log('###updateStyles:', this.getColor(SIDE_BAR_BACKGROUND), container)
 		container.style.backgroundColor = this.getColor(SIDE_BAR_BACKGROUND) || '';
 		container.style.color = this.getColor(SIDE_BAR_FOREGROUND) || '';
 

@@ -68,7 +68,7 @@ export class ProxyAuthHandler extends Disposable {
 			opts.parent = focusedWindow;
 			opts.modal = true;
 		}
-
+		console.log('----new BrowserWindow3')
 		const win = new BrowserWindow(opts);
 		const config = {};
 		const baseUrl = require.toUrl('vs/code/electron-browser/proxy/auth.html');

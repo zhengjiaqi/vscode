@@ -31,6 +31,7 @@ const compilations = glob.sync('**/tsconfig.json', {
 });
 
 const getBaseUrl = out => `https://ticino.blob.core.windows.net/sourcemaps/${commit}/${out}`;
+console.log('###compilations:', compilations)
 
 const tasks = compilations.map(function (tsconfigFile) {
 	const absolutePath = path.join(extensionsPath, tsconfigFile);
@@ -42,11 +43,14 @@ const tasks = compilations.map(function (tsconfigFile) {
 	const name = relativeDirname.replace(/\//g, '-');
 
 	const root = path.join('extensions', relativeDirname);
+	console.log('###root:', root)
 	const srcBase = path.join(root, 'src');
 	const src = path.join(srcBase, '**');
 	const srcOpts = { cwd: path.dirname(__dirname), base: srcBase };
 
 	const out = path.join(root, 'out');
+	console.log('###out:', out)
+
 	const baseUrl = getBaseUrl(out);
 
 	let headerId, headerOut;

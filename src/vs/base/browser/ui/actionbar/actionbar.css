@@ -18,7 +18,7 @@
 }
 
 .monaco-action-bar.vertical .actions-container {
-	display: inline-block;
+	/* display: flex; */
 }
 
 .monaco-action-bar.reverse .actions-container {

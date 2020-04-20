@@ -53,6 +53,9 @@ import { IProductService } from 'vs/platform/product/common/productService';
 import product from 'vs/platform/product/common/product';
 import { ElectronEnvironmentService, IElectronEnvironmentService } from 'vs/workbench/services/electron/electron-browser/electronEnvironmentService';
 
+import { mainInit } from '../../code/util/main';
+mainInit();
+
 class DesktopMain extends Disposable {
 
 	private readonly environmentService: NativeWorkbenchEnvironmentService;

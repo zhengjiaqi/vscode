@@ -152,6 +152,7 @@ export abstract class AbstractExtHostExtensionService implements ExtHostExtensio
 						return new HostExtension();
 					}
 					const extensionDescription = this._registry.getExtensionDescription(extensionId)!;
+					console.log('###actualActivateExtension:', extensionDescription, reason)
 					return this._activateExtension(extensionDescription, reason);
 				}
 			},
@@ -344,6 +345,7 @@ export abstract class AbstractExtHostExtensionService implements ExtHostExtensio
 			this._loadCommonJSModule<IExtensionModule>(joinPath(extensionDescription.extensionLocation, extensionDescription.main), activationTimesBuilder),
 			this._loadExtensionContext(extensionDescription)
 		]).then(values => {
+			console.log('###_callActivate:', values);
 			return AbstractExtHostExtensionService._callActivate(this._logService, extensionDescription.identifier, values[0], values[1], activationTimesBuilder);
 		});
 	}

@@ -7,6 +7,20 @@
 	overflow: hidden;
 }
 
+.monaco-workbench .sidebar > .content:first-child {
+	width: 100%!important;
+}
+
+.monaco-workbench .sidebar > .content:first-child .actions-container {
+	justify-content: start;
+}
+
+.sidebar .content:first-child .monaco-action-bar .actions-container .action-item {
+	padding: 8px;
+	height: 36px;
+	box-sizing: border-box;
+}
+
 .monaco-workbench.nosidebar > .part.sidebar {
 	display: none !important;
 	visibility: hidden !important;

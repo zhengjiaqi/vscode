@@ -75,7 +75,8 @@ export abstract class Part extends Component implements ISerializableView {
 		this.parent = parent;
 		this.titleArea = this.createTitleArea(parent, options);
 		this.contentArea = this.createContentArea(parent, options);
-
+		console.log('###parent:', parent)
+		console.log('###this.contentArea:', this.contentArea)
 		this.partLayout = new PartLayout(this.options, this.contentArea);
 
 		this.updateStyles();
@@ -121,7 +122,7 @@ export abstract class Part extends Component implements ISerializableView {
 	 */
 	protected layoutContents(width: number, height: number): ILayoutContentResult {
 		const partLayout = assertIsDefined(this.partLayout);
-
+		console.log('###layoutContents:', width, height);
 		return partLayout.layout(width, height);
 	}
 

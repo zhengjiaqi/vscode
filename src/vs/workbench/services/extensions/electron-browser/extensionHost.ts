@@ -42,6 +42,7 @@ import { IHostService } from 'vs/workbench/services/host/browser/host';
 import { joinPath } from 'vs/base/common/resources';
 import { Registry } from 'vs/platform/registry/common/platform';
 import { IOutputChannelRegistry, Extensions } from 'vs/workbench/services/output/common/output';
+import{ getContext, getWebViewContext, handleExtHostEvent } from 'vs/code/util/index'
 
 export class ExtensionHostProcessWorker implements IExtensionHostStarter {
 
@@ -174,6 +175,14 @@ export class ExtensionHostProcessWorker implements IExtensionHostStarter {
 					opts.env.CRASH_REPORTER_START_OPTIONS = JSON.stringify(crashReporterOptions);
 				}
 
+				const context = getContext();
+				const webviewContext = getWebViewContext();
+				console.log('###fork-context:', context);
+				console.log('###fork-webviewContext:', webviewContext);
+				console.log('###fork-path:', getPathFromAmdModule(require, 'bootstrap-fork'))
+
+				console.log('###fork:', require, opts)
+
 				// Run Extension Host as fork of current process
 				this._extensionHostProcess = fork(getPathFromAmdModule(require, 'bootstrap-fork'), ['--type=extensionHost'], opts);
 
@@ -215,8 +224,10 @@ export class ExtensionHostProcessWorker implements IExtensionHostStarter {
 					}
 				});
 
+				handleExtHostEvent(this._extensionHostProcess);
 				// Support logging from extension host
 				this._extensionHostProcess.on('message', msg => {
+					console.log('----------message:', msg);
 					if (msg && (<IRemoteConsoleLog>msg).type === '__$console') {
 						this._logExtensionHostMessage(<IRemoteConsoleLog>msg);
 					}
@@ -399,6 +410,7 @@ export class ExtensionHostProcessWorker implements IExtensionHostStarter {
 	}
 
 	private _createExtHostInitData(): Promise<IInitData> {
+		console.log('###this._extensions:', this._extensions);
 		return Promise.all([this._telemetryService.getTelemetryInfo(), this._extensions])
 			.then(([telemetryInfo, extensionDescriptions]) => {
 				const workspace = this._contextService.getWorkspace();
@@ -449,10 +461,12 @@ export class ExtensionHostProcessWorker implements IExtensionHostStarter {
 		if (this._isExtensionDevTestFromCli) {
 
 			// Log on main side if running tests from cli
+			console.log('###logRemoteEntry:', entry)
 			logRemoteEntry(this._logService, entry);
 		} else {
 
 			// Send to local console
+			console.log('###_logExtensionHostMessage:', entry)
 			log(entry, 'Extension Host');
 
 			// Broadcast to other windows if we are in development mode

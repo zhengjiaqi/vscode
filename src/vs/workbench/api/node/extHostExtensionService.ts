@@ -45,6 +45,7 @@ export class ExtHostExtensionService extends AbstractExtHostExtensionService {
 	protected async _beforeAlmostReadyToRunExtensions(): Promise<void> {
 		// initialize API and register actors
 		const extensionApiFactory = this._instaService.invokeFunction(createApiFactoryAndRegisterActors);
+		console.log('###createApiFactoryAndRegisterActors:', createApiFactoryAndRegisterActors, extensionApiFactory)
 
 		// Register Download command
 		this._instaService.createInstance(ExtHostDownloadService);
@@ -71,6 +72,7 @@ export class ExtHostExtensionService extends AbstractExtHostExtensionService {
 			if (args.length === 0 || !args[0] || args[0].type !== '__$console') {
 				return nativeProcessSend.apply(process, args);
 			}
+			// console.log('###mainThreadConsole.$logExtensionHostMessag:', args[0])
 			mainThreadConsole.$logExtensionHostMessage(args[0]);
 			return false;
 		};

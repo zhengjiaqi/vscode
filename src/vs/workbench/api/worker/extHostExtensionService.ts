@@ -37,6 +37,8 @@ export class ExtHostExtensionService extends AbstractExtHostExtensionService {
 	protected async _beforeAlmostReadyToRunExtensions(): Promise<void> {
 		// initialize API and register actors
 		const apiFactory = this._instaService.invokeFunction(createApiFactoryAndRegisterActors);
+		console.log('###createApiFactoryAndRegisterActors2:', createApiFactoryAndRegisterActors)
+
 		this._fakeModules = this._instaService.createInstance(WorkerRequireInterceptor, apiFactory, this._registry);
 		await this._fakeModules.install();
 	}

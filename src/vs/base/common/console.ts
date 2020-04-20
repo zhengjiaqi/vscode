@@ -129,6 +129,9 @@ export function log(entry: IRemoteConsoleLog, label: string): void {
 	if (topFrame && !isOneStringArg) {
 		consoleArgs.push(topFrame);
 	}
+	console.log('###consoleArgs:', consoleArgs)
+	console.log('###entry.severity:', entry.severity)
+	console.log('###entry:', entry)
 
 	// Log it
 	if (typeof (console as any)[entry.severity] !== 'function') {

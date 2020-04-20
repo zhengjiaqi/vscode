@@ -98,6 +98,7 @@ interface IRendererConnection {
 	initData: IInitData;
 }
 function connectToRenderer(protocol: IMessagePassingProtocol): Promise<IRendererConnection> {
+	console.log('###connectToRenderer:', protocol);
 	return new Promise<IRendererConnection>(resolve => {
 		const once = protocol.onMessage(raw => {
 			once.dispose();

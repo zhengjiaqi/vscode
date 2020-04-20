@@ -127,6 +127,7 @@ export class CachedExtensionScanner {
 		}
 		const actual = cacheContents.result;
 
+		console.log('###expected:', expected, 'actual:', actual);
 		if (objects.equals(expected, actual)) {
 			// Cache is valid and running with it is perfectly fine...
 			return;

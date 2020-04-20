@@ -672,6 +672,12 @@ class LeafNode implements ISplitView<ILayoutContext>, IDisposable {
 			throw new Error('Invalid state');
 		}
 
+		console.log('###this.view:', this.view)
+		if(this.view.id === 'workbench.parts.activitybar'){
+			this.view.layout(this.width, 36, this.top, this.left);
+			return;
+		}
+		// debugger
 		this._size = size;
 		this._orthogonalSize = ctx.orthogonalSize;
 		this.absoluteOffset = ctx.absoluteOffset + offset;
@@ -696,6 +702,7 @@ export interface INodeDescriptor {
 }
 
 function flipNode<T extends Node>(node: T, size: number, orthogonalSize: number): T {
+	debugger
 	if (node instanceof BranchNode) {
 		const result = new BranchNode(orthogonal(node.orientation), node.layoutController, node.styles, node.proportionalLayout, size, orthogonalSize);
 
@@ -763,6 +770,7 @@ export class GridView implements IDisposable {
 
 		const { size, orthogonalSize } = this._root;
 		this.root = flipNode(this._root, orthogonalSize, size);
+		debugger
 		this.root.layout(size, 0, { orthogonalSize, absoluteOffset: 0, absoluteOrthogonalOffset: 0, absoluteSize: size, absoluteOrthogonalSize: orthogonalSize });
 	}
 
@@ -817,7 +825,7 @@ export class GridView implements IDisposable {
 
 	layout(width: number, height: number): void {
 		this.firstLayoutController.isLayoutEnabled = true;
-
+		// debugger
 		const [size, orthogonalSize] = this.root.orientation === Orientation.HORIZONTAL ? [height, width] : [width, height];
 		this.root.layout(size, 0, { orthogonalSize, absoluteOffset: 0, absoluteOrthogonalOffset: 0, absoluteSize: size, absoluteOrthogonalSize: orthogonalSize });
 	}
@@ -1109,6 +1117,7 @@ export class GridView implements IDisposable {
 
 	private _deserializeNode(node: ISerializedNode, orientation: Orientation, deserializer: IViewDeserializer<ISerializableView>, orthogonalSize: number): Node {
 		let result: Node;
+		// debugger
 		if (node.type === 'branch') {
 			const serializedChildren = node.data as ISerializedNode[];
 			const children = serializedChildren.map(serializedChild => {

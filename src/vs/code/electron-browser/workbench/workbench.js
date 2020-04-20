@@ -109,6 +109,7 @@ function showPartsSplash(configuration) {
 		layoutInfo.sideBarWidth = Math.min(layoutInfo.sideBarWidth, window.innerWidth - (layoutInfo.activityBarWidth + layoutInfo.editorPartMinWidth));
 
 		if (configuration.folderUri || configuration.workspace) {
+			console.log('###colorInfo.sideBarBackground:', colorInfo.sideBarBackground)
 			// folder or workspace -> status bar color, sidebar
 			splash.innerHTML = `
 			<div style="position: absolute; width: 100%; left: 0; top: 0; height: ${layoutInfo.titleBarHeight}px; background-color: ${colorInfo.titleBarBackground}; -webkit-app-region: drag;"></div>

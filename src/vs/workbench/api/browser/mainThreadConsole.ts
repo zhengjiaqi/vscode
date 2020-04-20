@@ -36,6 +36,7 @@ export class MainThreadConsole implements MainThreadConsoleShape {
 	$logExtensionHostMessage(entry: IRemoteConsoleLog): void {
 		// Send to local console unless we run tests from cli
 		if (!this._isExtensionDevTestFromCli) {
+			console.log('###$logExtensionHostMessage:', entry)
 			log(entry, 'Extension Host');
 		}
 

@@ -34,8 +34,10 @@
     "vs": "VSCODE=true electron out/main.js"
   },
   "dependencies": {
+    "@types/fs-extra": "7.0.0",
     "applicationinsights": "1.0.8",
     "chokidar": "3.2.3",
+    "fs-extra": "7.0.0",
     "graceful-fs": "4.2.3",
     "http-proxy-agent": "^2.1.0",
     "https-proxy-agent": "^2.2.3",

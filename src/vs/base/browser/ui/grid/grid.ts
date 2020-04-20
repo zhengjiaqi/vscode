@@ -227,6 +227,7 @@ export class Grid<T extends IView = IView> extends Disposable {
 		} else {
 			this.gridview = new GridView(options);
 		}
+		console.log('###this.gridview:', this.gridview)
 		this._register(this.gridview);
 
 		this._register(this.gridview.onDidSashReset(this.onDidSashReset, this));
